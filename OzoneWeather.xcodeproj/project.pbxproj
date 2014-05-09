@@ -32,6 +32,10 @@
 		F49B1254191D533A0008EAB0 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1252191D533A0008EAB0 /* TFHppleElement.m */; };
 		F49B1257191D535D0008EAB0 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1256191D535D0008EAB0 /* XPathQuery.m */; };
 		F49B1259191D543D0008EAB0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F49B1258191D543D0008EAB0 /* libxml2.dylib */; };
+		F49B125C191D5E020008EAB0 /* OWClient.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B125B191D5E020008EAB0 /* OWClient.m */; };
+		F49B125F191D5E2C0008EAB0 /* OWManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B125E191D5E2C0008EAB0 /* OWManager.m */; };
+		F49B1262191D5E620008EAB0 /* OWCondition.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1261191D5E620008EAB0 /* OWCondition.m */; };
+		F49B1265191D5E930008EAB0 /* OWDailyForecast.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1264191D5E930008EAB0 /* OWDailyForecast.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -80,6 +84,14 @@
 		F49B1255191D535D0008EAB0 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
 		F49B1256191D535D0008EAB0 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
 		F49B1258191D543D0008EAB0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
+		F49B125A191D5E020008EAB0 /* OWClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWClient.h; sourceTree = "<group>"; };
+		F49B125B191D5E020008EAB0 /* OWClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWClient.m; sourceTree = "<group>"; };
+		F49B125D191D5E2C0008EAB0 /* OWManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWManager.h; sourceTree = "<group>"; };
+		F49B125E191D5E2C0008EAB0 /* OWManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWManager.m; sourceTree = "<group>"; };
+		F49B1260191D5E620008EAB0 /* OWCondition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWCondition.h; path = OzoneWeather/OWCondition.h; sourceTree = "<group>"; };
+		F49B1261191D5E620008EAB0 /* OWCondition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWCondition.m; path = OzoneWeather/OWCondition.m; sourceTree = "<group>"; };
+		F49B1263191D5E930008EAB0 /* OWDailyForecast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OWDailyForecast.h; path = OzoneWeather/OWDailyForecast.h; sourceTree = "<group>"; };
+		F49B1264191D5E930008EAB0 /* OWDailyForecast.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = OWDailyForecast.m; path = OzoneWeather/OWDailyForecast.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,8 +123,6 @@
 		F43AA5E5191C425400BCF1E5 = {
 			isa = PBXGroup;
 			children = (
-				F49B124E191D52DD0008EAB0 /* hpple */,
-				F49B124A191D49260008EAB0 /* Models */,
 				F43AA5F7191C425400BCF1E5 /* OzoneWeather */,
 				F43AA610191C425400BCF1E5 /* OzoneWeatherTests */,
 				F43AA5F0191C425400BCF1E5 /* Frameworks */,
@@ -146,12 +156,18 @@
 		F43AA5F7191C425400BCF1E5 /* OzoneWeather */ = {
 			isa = PBXGroup;
 			children = (
-				F447CAC9191CAD9B00262572 /* bkg_images */,
 				F43AA600191C425400BCF1E5 /* OWAppDelegate.h */,
 				F43AA601191C425400BCF1E5 /* OWAppDelegate.m */,
-				F43AA603191C425400BCF1E5 /* Images.xcassets */,
 				F427ACDB191C58530003A80C /* OWController.h */,
 				F427ACDC191C58530003A80C /* OWController.m */,
+				F49B125A191D5E020008EAB0 /* OWClient.h */,
+				F49B125B191D5E020008EAB0 /* OWClient.m */,
+				F49B125D191D5E2C0008EAB0 /* OWManager.h */,
+				F49B125E191D5E2C0008EAB0 /* OWManager.m */,
+				F49B124A191D49260008EAB0 /* Models */,
+				F43AA603191C425400BCF1E5 /* Images.xcassets */,
+				F447CAC9191CAD9B00262572 /* bkg_images */,
+				F49B124E191D52DD0008EAB0 /* hpple */,
 				F43AA5F8191C425400BCF1E5 /* Supporting Files */,
 			);
 			path = OzoneWeather;
@@ -205,8 +221,13 @@
 			children = (
 				F49B124B191D49970008EAB0 /* OWOzoneLevel.h */,
 				F49B124C191D49970008EAB0 /* OWOzoneLevel.m */,
+				F49B1260191D5E620008EAB0 /* OWCondition.h */,
+				F49B1261191D5E620008EAB0 /* OWCondition.m */,
+				F49B1263191D5E930008EAB0 /* OWDailyForecast.h */,
+				F49B1264191D5E930008EAB0 /* OWDailyForecast.m */,
 			);
 			name = Models;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		F49B124E191D52DD0008EAB0 /* hpple */ = {
@@ -220,6 +241,7 @@
 				F49B1252191D533A0008EAB0 /* TFHppleElement.m */,
 			);
 			name = hpple;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -359,13 +381,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F49B1265191D5E930008EAB0 /* OWDailyForecast.m in Sources */,
 				F49B1254191D533A0008EAB0 /* TFHppleElement.m in Sources */,
 				F49B1257191D535D0008EAB0 /* XPathQuery.m in Sources */,
+				F49B125C191D5E020008EAB0 /* OWClient.m in Sources */,
 				F49B1253191D533A0008EAB0 /* TFHpple.m in Sources */,
 				F43AA602191C425400BCF1E5 /* OWAppDelegate.m in Sources */,
+				F49B125F191D5E2C0008EAB0 /* OWManager.m in Sources */,
 				F427ACDD191C58530003A80C /* OWController.m in Sources */,
 				F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */,
 				F43AA5FE191C425400BCF1E5 /* main.m in Sources */,
+				F49B1262191D5E620008EAB0 /* OWCondition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

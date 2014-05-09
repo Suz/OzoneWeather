@@ -12,7 +12,7 @@
 @interface OWOzoneLevel : NSObject
 
 @property (nonatomic, copy) NSDate *ozoneDate;
-@property (nonatomic, assign) CLLocationCoordinate2D ozoneLocation;
-@property (nonatomic, assign) CGFloat ozoneLevel;
+@property (nonatomic, copy) CLLocation *ozoneLocation;
+@property (nonatomic, copy) NSNumber *ozoneLevel;
 
 @end
