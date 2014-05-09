@@ -10,9 +10,8 @@
 
 @implementation OWOzoneLevel
 
-@synthesize predictionDate = _predictionDate;
-@synthesize latitude = _latitude;
-@synthesize longitude = _longitude;
+@synthesize ozoneDate = _ozoneDate;
+@synthesize ozoneLocation = _ozoneLocation;
 @synthesize ozoneLevel = _ozoneLevel;
 
 @end
