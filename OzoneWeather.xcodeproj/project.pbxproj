@@ -28,6 +28,10 @@
 		F447CACE191CAD9B00262572 /* partlySunny@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */; };
 		F447CACF191CAD9B00262572 /* partlySunny@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC8191CAD9B00262572 /* partlySunny@2.png */; };
 		F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B124C191D49970008EAB0 /* OWOzoneLevel.m */; };
+		F49B1253191D533A0008EAB0 /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1250191D533A0008EAB0 /* TFHpple.m */; };
+		F49B1254191D533A0008EAB0 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1252191D533A0008EAB0 /* TFHppleElement.m */; };
+		F49B1257191D535D0008EAB0 /* XPathQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1256191D535D0008EAB0 /* XPathQuery.m */; };
+		F49B1259191D543D0008EAB0 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F49B1258191D543D0008EAB0 /* libxml2.dylib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +73,13 @@
 		F447CAC8191CAD9B00262572 /* partlySunny@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "partlySunny@2.png"; sourceTree = "<group>"; };
 		F49B124B191D49970008EAB0 /* OWOzoneLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWOzoneLevel.h; sourceTree = "<group>"; };
 		F49B124C191D49970008EAB0 /* OWOzoneLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWOzoneLevel.m; sourceTree = "<group>"; };
+		F49B124F191D533A0008EAB0 /* TFHpple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHpple.h; sourceTree = "<group>"; };
+		F49B1250191D533A0008EAB0 /* TFHpple.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHpple.m; sourceTree = "<group>"; };
+		F49B1251191D533A0008EAB0 /* TFHppleElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHppleElement.h; sourceTree = "<group>"; };
+		F49B1252191D533A0008EAB0 /* TFHppleElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFHppleElement.m; sourceTree = "<group>"; };
+		F49B1255191D535D0008EAB0 /* XPathQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XPathQuery.h; sourceTree = "<group>"; };
+		F49B1256191D535D0008EAB0 /* XPathQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XPathQuery.m; sourceTree = "<group>"; };
+		F49B1258191D543D0008EAB0 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +87,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F49B1259191D543D0008EAB0 /* libxml2.dylib in Frameworks */,
 				F43AA5F4191C425400BCF1E5 /* CoreGraphics.framework in Frameworks */,
 				F43AA5F6191C425400BCF1E5 /* UIKit.framework in Frameworks */,
 				F43AA5F2191C425400BCF1E5 /* Foundation.framework in Frameworks */,
@@ -99,6 +111,7 @@
 		F43AA5E5191C425400BCF1E5 = {
 			isa = PBXGroup;
 			children = (
+				F49B124E191D52DD0008EAB0 /* hpple */,
 				F49B124A191D49260008EAB0 /* Models */,
 				F43AA5F7191C425400BCF1E5 /* OzoneWeather */,
 				F43AA610191C425400BCF1E5 /* OzoneWeatherTests */,
@@ -120,6 +133,7 @@
 		F43AA5F0191C425400BCF1E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F49B1258191D543D0008EAB0 /* libxml2.dylib */,
 				F43AA5F1191C425400BCF1E5 /* Foundation.framework */,
 				F43AA5F3191C425400BCF1E5 /* CoreGraphics.framework */,
 				F43AA5F5191C425400BCF1E5 /* UIKit.framework */,
@@ -193,6 +207,19 @@
 				F49B124C191D49970008EAB0 /* OWOzoneLevel.m */,
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		F49B124E191D52DD0008EAB0 /* hpple */ = {
+			isa = PBXGroup;
+			children = (
+				F49B1255191D535D0008EAB0 /* XPathQuery.h */,
+				F49B1256191D535D0008EAB0 /* XPathQuery.m */,
+				F49B124F191D533A0008EAB0 /* TFHpple.h */,
+				F49B1250191D533A0008EAB0 /* TFHpple.m */,
+				F49B1251191D533A0008EAB0 /* TFHppleElement.h */,
+				F49B1252191D533A0008EAB0 /* TFHppleElement.m */,
+			);
+			name = hpple;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,6 +359,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F49B1254191D533A0008EAB0 /* TFHppleElement.m in Sources */,
+				F49B1257191D535D0008EAB0 /* XPathQuery.m in Sources */,
+				F49B1253191D533A0008EAB0 /* TFHpple.m in Sources */,
 				F43AA602191C425400BCF1E5 /* OWAppDelegate.m in Sources */,
 				F427ACDD191C58530003A80C /* OWController.m in Sources */,
 				F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */,
@@ -459,6 +489,15 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OzoneWeather/OzoneWeather-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/HexColors\"",
+					"\"${PODS_ROOT}/Headers/Mantle\"",
+					"\"${PODS_ROOT}/Headers/ReactiveCocoa\"",
+					"\"${PODS_ROOT}/Headers/ReactiveCocoa/ReactiveCocoa\"",
+					"\"${PODS_ROOT}/Headers/TSMessages\"",
+					"$(SDKROOT)/usr/include/libxml2",
+				);
 				INFOPLIST_FILE = "OzoneWeather/OzoneWeather-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -473,6 +512,15 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "OzoneWeather/OzoneWeather-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"\"${PODS_ROOT}/Headers\"",
+					"\"${PODS_ROOT}/Headers/HexColors\"",
+					"\"${PODS_ROOT}/Headers/Mantle\"",
+					"\"${PODS_ROOT}/Headers/ReactiveCocoa\"",
+					"\"${PODS_ROOT}/Headers/ReactiveCocoa/ReactiveCocoa\"",
+					"\"${PODS_ROOT}/Headers/TSMessages\"",
+					"$(SDKROOT)/usr/include/libxml2",
+				);
 				INFOPLIST_FILE = "OzoneWeather/OzoneWeather-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
