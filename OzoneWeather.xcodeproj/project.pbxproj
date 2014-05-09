@@ -27,6 +27,7 @@
 		F447CACD191CAD9B00262572 /* floatyclouds@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC6191CAD9B00262572 /* floatyclouds@2.png */; };
 		F447CACE191CAD9B00262572 /* partlySunny@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */; };
 		F447CACF191CAD9B00262572 /* partlySunny@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC8191CAD9B00262572 /* partlySunny@2.png */; };
+		F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B124C191D49970008EAB0 /* OWOzoneLevel.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,12 +61,14 @@
 		F43AA612191C425400BCF1E5 /* OzoneWeatherTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OzoneWeatherTests-Info.plist"; sourceTree = "<group>"; };
 		F43AA614191C425400BCF1E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F43AA616191C425400BCF1E5 /* OzoneWeatherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OzoneWeatherTests.m; sourceTree = "<group>"; };
-		F447CAC3191CAD9B00262572 /* floatyclouds.jpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = floatyclouds.jpg; sourceTree = "<group>"; };
-		F447CAC4191CAD9B00262572 /* floatyclouds.png */ = {isa = PBXFileReference; lastKnownFileType = file; path = floatyclouds.png; sourceTree = "<group>"; };
-		F447CAC5191CAD9B00262572 /* floatyclouds@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "floatyclouds@2.jpg"; sourceTree = "<group>"; };
-		F447CAC6191CAD9B00262572 /* floatyclouds@2.png */ = {isa = PBXFileReference; lastKnownFileType = file; path = "floatyclouds@2.png"; sourceTree = "<group>"; };
-		F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partlySunny@2.jpg"; sourceTree = "<group>"; };
-		F447CAC8191CAD9B00262572 /* partlySunny@2.png */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partlySunny@2.png"; sourceTree = "<group>"; };
+		F447CAC3191CAD9B00262572 /* floatyclouds.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = floatyclouds.jpg; sourceTree = "<group>"; };
+		F447CAC4191CAD9B00262572 /* floatyclouds.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = floatyclouds.png; sourceTree = "<group>"; };
+		F447CAC5191CAD9B00262572 /* floatyclouds@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "floatyclouds@2.jpg"; sourceTree = "<group>"; };
+		F447CAC6191CAD9B00262572 /* floatyclouds@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "floatyclouds@2.png"; sourceTree = "<group>"; };
+		F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "partlySunny@2.jpg"; sourceTree = "<group>"; };
+		F447CAC8191CAD9B00262572 /* partlySunny@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "partlySunny@2.png"; sourceTree = "<group>"; };
+		F49B124B191D49970008EAB0 /* OWOzoneLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWOzoneLevel.h; sourceTree = "<group>"; };
+		F49B124C191D49970008EAB0 /* OWOzoneLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWOzoneLevel.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +99,7 @@
 		F43AA5E5191C425400BCF1E5 = {
 			isa = PBXGroup;
 			children = (
+				F49B124A191D49260008EAB0 /* Models */,
 				F43AA5F7191C425400BCF1E5 /* OzoneWeather */,
 				F43AA610191C425400BCF1E5 /* OzoneWeatherTests */,
 				F43AA5F0191C425400BCF1E5 /* Frameworks */,
@@ -180,6 +184,15 @@
 			);
 			name = bkg_images;
 			path = ../bkg_images;
+			sourceTree = "<group>";
+		};
+		F49B124A191D49260008EAB0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				F49B124B191D49970008EAB0 /* OWOzoneLevel.h */,
+				F49B124C191D49970008EAB0 /* OWOzoneLevel.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,6 +334,7 @@
 			files = (
 				F43AA602191C425400BCF1E5 /* OWAppDelegate.m in Sources */,
 				F427ACDD191C58530003A80C /* OWController.m in Sources */,
+				F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */,
 				F43AA5FE191C425400BCF1E5 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
