@@ -7,16 +7,25 @@
 //
 
 #import "OWAppDelegate.h"
+#import "OWController.h"
+#import <TSMessage.h>
 
 @implementation OWAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    // Override point for customization after application launch.
+    //
+    self.window.rootViewController = [[OWController alloc] init];
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+    
+    [TSMessage setDefaultViewController: self.window.rootViewController];
     return YES;
+}
+
+-(UIStatusBarStyle)preferredStatusBarStyle {
+    return UIStatusBarStyleLightContent;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
