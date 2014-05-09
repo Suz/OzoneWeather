@@ -39,15 +39,88 @@
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     [self.view addSubview:self.backgroundImageView];
     
-   self.tableView = [[UITableView alloc] init];
+    
+    // top layer: tableView
+    //          -- main tableview setup
+    self.tableView = [[UITableView alloc] init];
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     self.tableView.separatorColor = [UIColor colorWithWhite:0.5 alpha:0.2];
     self.tableView.pagingEnabled = YES;
     
+    //          -- tableview header setup: frames for weather items
+    CGRect headerFrame = [UIScreen mainScreen].bounds;
     
+    CGFloat inset = 20;
+    
+    CGFloat temperatureHeight = 110;
+    CGFloat hiLoHeight = 40;
+    CGFloat iconSize = 30;
+    
+    CGRect hiLoFrame = CGRectMake(inset,
+                                      headerFrame.size.height - hiLoHeight,
+                                      headerFrame.size.width - (2 * inset),
+                                      hiLoHeight);
+    
+    CGRect temperatureFrame = CGRectMake(inset,
+                                         headerFrame.size.height - hiLoHeight - temperatureHeight,
+                                         headerFrame.size.width - (2 * inset),
+                                         temperatureHeight);
 
+    CGRect iconFrame = CGRectMake(inset,
+                                  headerFrame.size.height - hiLoHeight - temperatureHeight,
+                                  iconSize,
+                                  iconSize);
+    
+    CGRect conditionsFrame = iconFrame;
+    conditionsFrame.size.width = headerFrame.size.width - (2 * inset) - iconSize + 10;
+    conditionsFrame.origin.x = iconFrame.origin.x + iconSize + 10;
+    
+    UIView *header = [[UIView alloc] initWithFrame:headerFrame];
+    header.backgroundColor = [UIColor clearColor];
+    self.tableView.tableHeaderView = header;
+    
+    //top center
+    UILabel *cityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, 30)];
+    cityLabel.backgroundColor = [UIColor clearColor];
+    cityLabel.textColor = [UIColor blackColor];
+    cityLabel.text = @"Loading....";
+    cityLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    cityLabel.textAlignment = NSTextAlignmentCenter;
+    [header addSubview:cityLabel];
+
+    //center
+    UILabel *temperatureLabel = [[UILabel alloc] initWithFrame:temperatureFrame];
+    temperatureLabel.backgroundColor = [UIColor clearColor];
+    temperatureLabel.textColor = [UIColor blackColor];
+    temperatureLabel.text = @"0°";
+    temperatureLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:120];
+    [header addSubview:temperatureLabel];
+    
+    //bottom left
+    UILabel *conditionsLabel = [[UILabel alloc] initWithFrame:conditionsFrame];
+    conditionsLabel.backgroundColor = [UIColor clearColor];
+    conditionsLabel.textColor = [UIColor blackColor];
+    conditionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    [header addSubview:conditionsLabel];
+    
+    //bottom left
+    UILabel *hiLoLabel = [[UILabel alloc] initWithFrame:hiLoFrame];
+    hiLoLabel.backgroundColor = [UIColor clearColor];
+    hiLoLabel.textColor = [UIColor blackColor];
+    hiLoLabel.text = @"0° / 0°";
+    hiLoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28];
+    [header addSubview:hiLoLabel];
+    
+    
+    //bottom left
+    UIImageView *iconView = [[UIImageView alloc] initWithFrame:iconFrame];
+    iconView.contentMode = UIViewContentModeScaleAspectFit;
+    iconView.backgroundColor = [UIColor clearColor];
+    [header addSubview:iconView];
+    
+    [self.view addSubview:self.tableView];
 }
 
 -(void)viewWillLayoutSubviews {
@@ -57,7 +130,6 @@
     
     self.backgroundImageView.frame = bounds;
     self.tableView.frame = bounds;
-    
 }
 
 # pragma mark -- UITableViewDataSource

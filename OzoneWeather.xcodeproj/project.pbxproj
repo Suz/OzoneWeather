@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		346C0F4503DA4D5F930FD70C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF47044CB4764E148D85C22D /* libPods.a */; };
 		F427ACDD191C58530003A80C /* OWController.m in Sources */ = {isa = PBXBuildFile; fileRef = F427ACDC191C58530003A80C /* OWController.m */; };
-		F427ACE2191C63A90003A80C /* floatyclouds.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F427ACDF191C63A90003A80C /* floatyclouds.jpg */; };
-		F427ACE3191C63A90003A80C /* floatyclouds@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F427ACE0191C63A90003A80C /* floatyclouds@2.jpg */; };
-		F427ACE4191C63A90003A80C /* partlySunny@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F427ACE1191C63A90003A80C /* partlySunny@2.jpg */; };
 		F43AA5F2191C425400BCF1E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43AA5F1191C425400BCF1E5 /* Foundation.framework */; };
 		F43AA5F4191C425400BCF1E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43AA5F3191C425400BCF1E5 /* CoreGraphics.framework */; };
 		F43AA5F6191C425400BCF1E5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43AA5F5191C425400BCF1E5 /* UIKit.framework */; };
@@ -24,6 +21,12 @@
 		F43AA60D191C425400BCF1E5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43AA5F5191C425400BCF1E5 /* UIKit.framework */; };
 		F43AA615191C425400BCF1E5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F43AA613191C425400BCF1E5 /* InfoPlist.strings */; };
 		F43AA617191C425400BCF1E5 /* OzoneWeatherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F43AA616191C425400BCF1E5 /* OzoneWeatherTests.m */; };
+		F447CACA191CAD9B00262572 /* floatyclouds.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC3191CAD9B00262572 /* floatyclouds.jpg */; };
+		F447CACB191CAD9B00262572 /* floatyclouds.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC4191CAD9B00262572 /* floatyclouds.png */; };
+		F447CACC191CAD9B00262572 /* floatyclouds@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC5191CAD9B00262572 /* floatyclouds@2.jpg */; };
+		F447CACD191CAD9B00262572 /* floatyclouds@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC6191CAD9B00262572 /* floatyclouds@2.png */; };
+		F447CACE191CAD9B00262572 /* partlySunny@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */; };
+		F447CACF191CAD9B00262572 /* partlySunny@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC8191CAD9B00262572 /* partlySunny@2.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,9 +44,6 @@
 		AF47044CB4764E148D85C22D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		F427ACDB191C58530003A80C /* OWController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWController.h; sourceTree = "<group>"; };
 		F427ACDC191C58530003A80C /* OWController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWController.m; sourceTree = "<group>"; };
-		F427ACDF191C63A90003A80C /* floatyclouds.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = floatyclouds.jpg; sourceTree = "<group>"; };
-		F427ACE0191C63A90003A80C /* floatyclouds@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "floatyclouds@2.jpg"; sourceTree = "<group>"; };
-		F427ACE1191C63A90003A80C /* partlySunny@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "partlySunny@2.jpg"; sourceTree = "<group>"; };
 		F43AA5EE191C425400BCF1E5 /* OzoneWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OzoneWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F43AA5F1191C425400BCF1E5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F43AA5F3191C425400BCF1E5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -60,6 +60,12 @@
 		F43AA612191C425400BCF1E5 /* OzoneWeatherTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "OzoneWeatherTests-Info.plist"; sourceTree = "<group>"; };
 		F43AA614191C425400BCF1E5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F43AA616191C425400BCF1E5 /* OzoneWeatherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OzoneWeatherTests.m; sourceTree = "<group>"; };
+		F447CAC3191CAD9B00262572 /* floatyclouds.jpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = floatyclouds.jpg; sourceTree = "<group>"; };
+		F447CAC4191CAD9B00262572 /* floatyclouds.png */ = {isa = PBXFileReference; lastKnownFileType = file; path = floatyclouds.png; sourceTree = "<group>"; };
+		F447CAC5191CAD9B00262572 /* floatyclouds@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "floatyclouds@2.jpg"; sourceTree = "<group>"; };
+		F447CAC6191CAD9B00262572 /* floatyclouds@2.png */ = {isa = PBXFileReference; lastKnownFileType = file; path = "floatyclouds@2.png"; sourceTree = "<group>"; };
+		F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partlySunny@2.jpg"; sourceTree = "<group>"; };
+		F447CAC8191CAD9B00262572 /* partlySunny@2.png */ = {isa = PBXFileReference; lastKnownFileType = file; path = "partlySunny@2.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,16 +93,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		F427ACDE191C63A90003A80C /* bkg_images */ = {
-			isa = PBXGroup;
-			children = (
-				F427ACDF191C63A90003A80C /* floatyclouds.jpg */,
-				F427ACE0191C63A90003A80C /* floatyclouds@2.jpg */,
-				F427ACE1191C63A90003A80C /* partlySunny@2.jpg */,
-			);
-			path = bkg_images;
-			sourceTree = "<group>";
-		};
 		F43AA5E5191C425400BCF1E5 = {
 			isa = PBXGroup;
 			children = (
@@ -132,13 +128,13 @@
 		F43AA5F7191C425400BCF1E5 /* OzoneWeather */ = {
 			isa = PBXGroup;
 			children = (
+				F447CAC9191CAD9B00262572 /* bkg_images */,
 				F43AA600191C425400BCF1E5 /* OWAppDelegate.h */,
 				F43AA601191C425400BCF1E5 /* OWAppDelegate.m */,
 				F43AA603191C425400BCF1E5 /* Images.xcassets */,
-				F43AA5F8191C425400BCF1E5 /* Supporting Files */,
 				F427ACDB191C58530003A80C /* OWController.h */,
-				F427ACDE191C63A90003A80C /* bkg_images */,
 				F427ACDC191C58530003A80C /* OWController.m */,
+				F43AA5F8191C425400BCF1E5 /* Supporting Files */,
 			);
 			path = OzoneWeather;
 			sourceTree = "<group>";
@@ -170,6 +166,20 @@
 				F43AA613191C425400BCF1E5 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F447CAC9191CAD9B00262572 /* bkg_images */ = {
+			isa = PBXGroup;
+			children = (
+				F447CAC3191CAD9B00262572 /* floatyclouds.jpg */,
+				F447CAC4191CAD9B00262572 /* floatyclouds.png */,
+				F447CAC5191CAD9B00262572 /* floatyclouds@2.jpg */,
+				F447CAC6191CAD9B00262572 /* floatyclouds@2.png */,
+				F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */,
+				F447CAC8191CAD9B00262572 /* partlySunny@2.png */,
+			);
+			name = bkg_images;
+			path = ../bkg_images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -250,11 +260,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F427ACE3191C63A90003A80C /* floatyclouds@2.jpg in Resources */,
+				F447CACB191CAD9B00262572 /* floatyclouds.png in Resources */,
+				F447CACE191CAD9B00262572 /* partlySunny@2.jpg in Resources */,
+				F447CACC191CAD9B00262572 /* floatyclouds@2.jpg in Resources */,
+				F447CACD191CAD9B00262572 /* floatyclouds@2.png in Resources */,
 				F43AA5FC191C425400BCF1E5 /* InfoPlist.strings in Resources */,
 				F43AA604191C425400BCF1E5 /* Images.xcassets in Resources */,
-				F427ACE2191C63A90003A80C /* floatyclouds.jpg in Resources */,
-				F427ACE4191C63A90003A80C /* partlySunny@2.jpg in Resources */,
+				F447CACA191CAD9B00262572 /* floatyclouds.jpg in Resources */,
+				F447CACF191CAD9B00262572 /* partlySunny@2.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
