@@ -102,6 +102,7 @@
     UILabel *conditionsLabel = [[UILabel alloc] initWithFrame:conditionsFrame];
     conditionsLabel.backgroundColor = [UIColor clearColor];
     conditionsLabel.textColor = [UIColor blackColor];
+    conditionsLabel.text = @"Clear";
     conditionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     [header addSubview:conditionsLabel];
     
