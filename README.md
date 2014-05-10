@@ -13,9 +13,23 @@ The iOS best practices post includes a number of interesting technologies. I'm g
 - Mantle  -- a project from GitHub for creating data models:  aids conversion JSON <--> NSObject (very handy with a json data feed, as we'll see!)
 - [TSMessages](https://github.com/toursprung/TSMessages) -- a ticker-style alert message system. 
 - [ReactiveCocoa](https://github.com/Mantle/Mantle) -- allows you to use functional programming constructions in iOS apps
-- version control with git:
+- git for version control:
      - There's always the question of what to add to `.gitignore`. For `cocoapods` see the pros and cons at [guides.cocoapods.org](http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control).
      - For this project, I want to keep it lightweight, but also keep track of the dependencies. To do this, I'll add the `pods/` directory to `.gitignore`, but keep the `podfile`, `podfile.lock` and other files under version control.
      - used a s[tackoverflow post](http://stackoverflow.com/questions/18939421/what-should-xcode-5-gitignore-file-include) to get an appropriate `.gitignore` file
+     
+     
+###Temis
+Need to parse the temis website with xpath. The website is queried with a url string of the type http://www.temis.nl/uvradiation/nrt/uvindex.php?lon=5.18&lat=52.1 where the lon and lat values are provided by my code (location services). 
+
+The page is formated with a series of nested tables. The page header is one table, and a second table holds the body of the page with one column holding the frame to the left, a blank column, and a column holding the data table I'm interested in.    
+html -> body -> 2nd table -> tbody -> tr -> 3rd td -> dl -> dd -> table ->tbody ->
  
+tr -> td -> <h2> location </h2>
+  
+tr -> 3x td -> (headers as <i>) Date, UV index, ozone
+tr -> 3x td -> (data values) day Month year, .1f, .1f DU
+
+Date is based on which time zone?
+   
 
