@@ -10,7 +10,7 @@ PODS:
   - ReactiveCocoa/no-arc (2.3)
   - ReactiveCocoa/UI (2.3):
     - ReactiveCocoa/Core
-  - TSMessages (0.9.8):
+  - TSMessages (0.9.9):
     - HexColors
 
 DEPENDENCIES:
@@ -22,6 +22,6 @@ SPEC CHECKSUMS:
   HexColors: 99211502e17904af7891fc8f687d0e4958a6d66e
   Mantle: 0714cdb2b8559d9e6c2410d6a8529e3307bff189
   ReactiveCocoa: dde7b11a14954edf789e7343b2c32e595caabd01
-  TSMessages: 051325667c81643634f6458fa22bdbeb31d654a9
+  TSMessages: 49f9083df41d320b34e8d66c5ed3ef147e543187
 
 COCOAPODS: 0.32.1
