@@ -6,8 +6,21 @@
 //  Copyright (c) 2014 Suzanne Kiihne. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+@import Foundation;
+@import CoreLocation;
+#import <ReactiveCocoa/ReactiveCocoa/ReactiveCocoa.h>
 
-@interface OWManager : NSObject
+#import "OWCondition.h"
+
+@interface OWManager : NSObject  <CLLocationManagerDelegate>
+
++ (instancetype)sharedManager;
+
+@property (nonatomic, strong, readonly) CLLocation *currentLocation;
+@property (nonatomic, strong, readonly) OWCondition *currentCondition;
+@property (nonatomic, strong, readonly) NSArray *hourlyForecast;
+@property (nonatomic, strong, readonly) NSArray *dailyForecast;
+
+-(void)findCurrentLocation;
 
 @end
