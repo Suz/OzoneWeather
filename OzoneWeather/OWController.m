@@ -7,6 +7,7 @@
 //
 
 #import "OWController.h"
+#import "OWManager.h"
 
 @interface OWController ()
 
@@ -122,6 +123,8 @@
     [header addSubview:iconView];
     
     [self.view addSubview:self.tableView];
+    
+    [[OWManager sharedManager] findCurrentLocation];
 }
 
 -(void)viewWillLayoutSubviews {
