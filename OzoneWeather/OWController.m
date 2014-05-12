@@ -8,22 +8,27 @@
 
 #import "OWController.h"
 #import "OWManager.h"
+#import "OWCondition.h"
 
 @interface OWController ()
 
 @property (nonatomic,strong) UIImageView *backgroundImageView;
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,assign) CGFloat screenHeight;
+@property (nonatomic,strong) NSDateFormatter *hourlyFormatter;
+@property (nonatomic,strong) NSDateFormatter *dailyFormatter;
 
 @end
 
 @implementation OWController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+-(id)init {
+    if (self = [super init]) {
+        _hourlyFormatter = [[NSDateFormatter alloc] init];
+        _hourlyFormatter.dateFormat = @"h a";
+        
+        _dailyFormatter = [[NSDateFormatter alloc] init];
+        _dailyFormatter.dateFormat = @"EEEE";
     }
     return self;
 }
@@ -70,7 +75,7 @@
                                          temperatureHeight);
 
     CGRect iconFrame = CGRectMake(inset,
-                                  headerFrame.size.height - hiLoHeight - temperatureHeight,
+                                  headerFrame.size.height - hiLoHeight - temperatureHeight -iconSize,
                                   iconSize,
                                   iconSize);
     
@@ -124,6 +129,36 @@
     
     [self.view addSubview:self.tableView];
     
+    [[RACObserve([OWManager sharedManager], currentCondition)
+      deliverOn:RACScheduler.mainThreadScheduler]
+     subscribeNext:^(OWCondition *newCondition){
+         temperatureLabel.text = [NSString stringWithFormat:@"%.0f°",newCondition.temperature.floatValue];
+         conditionsLabel.text = [newCondition.conditionDescription capitalizedString];
+         cityLabel.text = [newCondition.locationName capitalizedString];
+         
+         iconView.image = [UIImage imageNamed:[newCondition imageName]];
+     }];
+    
+    RAC(hiLoLabel, text) = [[RACSignal combineLatest:@[
+                                    RACObserve([OWManager sharedManager],currentCondition.hiTemp),
+                                    RACObserve([OWManager sharedManager], currentCondition.loTemp)]
+                                    reduce:^(NSNumber *hi, NSNumber *low){
+                                            return [NSString stringWithFormat:@"%.0f° / %.0f°", hi.floatValue, low.floatValue];
+                                    }]
+                            deliverOn:RACScheduler.mainThreadScheduler];
+    
+    [[RACObserve([OWManager sharedManager], hourlyForecast)
+      deliverOn:RACScheduler.mainThreadScheduler]
+     subscribeNext:^(NSArray *newForecast){
+         [self.tableView reloadData];
+     }];
+    
+    [[RACObserve([OWManager sharedManager], dailyForecast)
+      deliverOn:RACScheduler.mainThreadScheduler]
+     subscribeNext:^(NSArray *newForecast){
+         [self.tableView reloadData];
+     }];
+    
     [[OWManager sharedManager] findCurrentLocation];
 }
 
@@ -142,7 +177,11 @@
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+    if (section == 0){
+        return MIN([[OWManager sharedManager].hourlyForecast count], 6) + 1;
+    }
+    
+    return MIN([[OWManager sharedManager].dailyForecast count], 6) + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -153,15 +192,53 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
     }
     
-    // 3
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
     cell.textLabel.textColor = [UIColor blackColor];
     cell.detailTextLabel.textColor = [UIColor grayColor];
     
-    // TODO: Setup the cell
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            [self configureHeaderCell:cell title:@"Hourly Forecast"];
+        } else {
+            OWCondition *weather = [OWManager sharedManager].hourlyForecast[indexPath.row - 1];
+            [self configureHourlyCell:cell withWeather: weather];
+        }
+    } else if (indexPath.section == 1) {
+        if (indexPath.row == 0) {
+            [self configureHeaderCell:cell title:@"Daily Forecast"];
+        } else {
+            OWCondition *weather = [OWManager sharedManager].dailyForecast[indexPath.row - 1];
+            [self configureDailyCell:cell withWeather: weather];
+        }
+    }
     
     return cell;
+}
+
+-(void)configureHeaderCell:(UITableViewCell *)cell title:(NSString *)title {
+    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
+    cell.textLabel.text = title;
+    cell.detailTextLabel.text = @"";
+    cell.imageView.image = nil;
+}
+
+-(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWCondition *)weather {
+    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
+    cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
+    cell.imageView.image = [UIImage imageNamed:[weather imageName]];
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+}
+
+-(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWCondition *)weather {
+    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
+    cell.textLabel.text = [self.dailyFormatter stringFromDate:weather.date];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.hiTemp.floatValue, weather.loTemp.floatValue];
+    cell.imageView.image = [UIImage imageNamed:[weather imageName]];
+    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
 }
 
 # pragma mark -- UITableViewDelegate
