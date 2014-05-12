@@ -78,7 +78,7 @@
     if (location.horizontalAccuracy > 0) {
         // currentLocation is subscribed to:  setting will trigger client!
         self.currentLocation = location;
-        [self.locationManager startUpdatingLocation];
+        [self.locationManager stopUpdatingLocation];
     }
     
 }
