@@ -6,9 +6,11 @@
 //  Copyright (c) 2014 Suzanne Kiihne. All rights reserved.
 //
 
+#import "TFHpple.h"
 #import "OWClient.h"
 #import "OWCondition.h"
 #import "OWDailyForecast.h"
+#import "OWOzoneLevel.h"
 
 @interface OWClient ()
 
@@ -128,12 +130,13 @@
         NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             // Handle session here
             if (! error) {
-                NSError *jsonError = nil;
-                id json = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&jsonError];
-                if (! jsonError) {
-                    [subscriber sendNext:json];
+                NSError *htmlError = nil;
+                // TODO: use a try/catch block to generate htmlerror
+                id htmldoc = [TFHpple hppleWithHTMLData:data encoding:@"UTF-8"];
+                if (! htmlError) {
+                    [subscriber sendNext:htmldoc];
                 } else {
-                    [subscriber sendError:jsonError];
+                    [subscriber sendError:htmlError];
                 }
             } else {
                 [subscriber sendError:error];
@@ -155,23 +158,30 @@
     }];
 }
 
+// about separation of concerns:  Ideally, all the details about the Temis Ozone format should be in the OzoneLevel object, but for ozone, there are two stages: 1) extracting the elements from the html page with XPath, and 2) parsing the elements into the model. I'm going to put step 1 here and step 2 in the model. The output of step 1 will be a dictionary correpsonding to the elements needed by the model.
+
+// dom model for temis data:
+// html -> body -> 2nd table -> tbody -> tr -> 3rd td -> dl -> dd -> table ->tbody ->
+//tr -> td -> <h2> location </h2>
+//tr -> 3x td -> (headers as <i>) Date, UV index, ozone
+//tr -> 3x td -> (data values) day Month year, .1f, .1f DU
+
+
+
+
 -(RACSignal *)fetchOzoneForecastForLocation:(CLLocationCoordinate2D)coordinate {
     // create the weather data url request string
     NSString *urlString = [NSString stringWithFormat:@"http://www.temis.nl/uvradiation/nrt/uvindex.php?lat=%f&lon=%f",coordinate.latitude, coordinate.longitude];
     NSURL *url = [NSURL URLWithString:urlString];
     
-    // create the RACSignal,  TODO: fix me for html, not json!
-    return [[self fetchHTMLFromURL:url] map:^(NSDictionary *json) {
+    // create the RACSignal, and map the results  from a json object (dictionary) to an instance of OWCondition using the adapter. whew.
+    return [[self fetchHTMLFromURL:url] map:^(TFHpple *doc) {
+        NSString *ozoneDataXpathQueryString = @"//dd/table/tbody/tr/td";  // how do I test this?
         
-        //build a sequence from the list of raw json
-        RACSequence *list = [json[@"list"] rac_sequence];
+        // attempt #1:  just return the array elements produced by the XPATH query... 
+        //NSArray *ozoneNodes = [doc searchWithXPathQuery:ozoneDataXpathQueryString];
         
-        //and map the sequence elements
-        return [[list map:^(NSDictionary *json){
-            //from json objects to an array OWDailyForecast objects using the Mantle whew.
-            return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:json error:nil];
-        }] array];
-        
+        return [doc searchWithXPathQuery:ozoneDataXpathQueryString];
     }];
 }
 
