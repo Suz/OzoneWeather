@@ -244,7 +244,7 @@
 # pragma mark -- UITableViewDelegate
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 44;  // TODO:  determine based on size of screen.
+    return self.screenHeight / [self tableView:tableView numberOfRowsInSection:indexPath.section];
 }
 
 - (void)didReceiveMemoryWarning
