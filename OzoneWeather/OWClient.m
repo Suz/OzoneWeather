@@ -30,8 +30,6 @@
 
 -(RACSignal *)fetchJSONFromURL:(NSURL *)url {
     
-    NSLog(@"Fetching: %@", url.absoluteString);
-    
     // factory method:  creates signal for other objects to use
     return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         // will fetch data to parse later
@@ -132,7 +130,7 @@
             if (! error) {
                 NSError *htmlError = nil;
                 // TODO: use a try/catch block to generate htmlerror
-                id htmldoc = [TFHpple hppleWithHTMLData:data encoding:@"UTF-8"];
+                id htmldoc = [TFHpple hppleWithHTMLData:data];
                 if (! htmlError) {
                     [subscriber sendNext:htmldoc];
                 } else {
@@ -175,13 +173,51 @@
     NSURL *url = [NSURL URLWithString:urlString];
     
     // create the RACSignal, and map the results  from a json object (dictionary) to an instance of OWCondition using the adapter. whew.
-    return [[self fetchHTMLFromURL:url] map:^(TFHpple *doc) {
-        NSString *ozoneDataXpathQueryString = @"//dd/table/tbody/tr/td";  // how do I test this?
-        
-        // attempt #1:  just return the array elements produced by the XPATH query... 
-        //NSArray *ozoneNodes = [doc searchWithXPathQuery:ozoneDataXpathQueryString];
+    
+/*    return [[self fetchHTMLFromURL:url] map:^(TFHpple *doc) {
+        NSString *ozoneDataXpathQueryString = @"//dd//td";  // how do I test this?
+        ///dd/table/tbody/tr/td
+        // attempt #1:  just return the array elements produced by the XPATH query...
+        //NSArray *ozoneNodes = [doc searchWithXPathQuery:@"//td"];
+        NSArray *ozoneNodes = [doc searchWithXPathQuery:ozoneDataXpathQueryString];
+        NSLog(@"Looking for %@, found %@",ozoneDataXpathQueryString, ozoneNodes);
         
         return [doc searchWithXPathQuery:ozoneDataXpathQueryString];
+    }];
+*/
+    // create the RACSignal,
+    return [[self fetchHTMLFromURL:url] map:^(TFHpple *doc) {
+        
+        //build a sequence from the table row nodes in the document
+        RACSequence *nodes = [[doc searchWithXPathQuery:@"//dd//tr"] rac_sequence];
+        
+        //and map the sequence elements
+        return [[[[[nodes map:^(TFHppleElement *tableRows){
+            
+            //by building a sequence from the items in a row
+            RACSequence *tableItem = [[tableRows children] rac_sequence];
+            
+            // and processing each item to get an array of clean strings
+            return [[[tableItem map:^(TFHppleElement *child){
+                return [[child text]
+                        stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+            }] filter:^BOOL(NSString *value) {
+                return value.length > 2;
+            }] array];
+            // at this point, I've got an array of 3 strings containing one row of the table:
+            // a date, a UV index value, and an ozone level. I'd like to use these to create ozone level objects
+            // to pack into my final array
+        }] filter:^BOOL(NSArray *rowArray) {
+            return rowArray.count > 0;
+        }] map:^(NSArray *rowArray) {
+            //NSLog(@"%@", rowArray);
+            return [NSDictionary dictionaryWithObjects:rowArray forKeys:@[@"date", @"uvIndex", @"columnOzone"]];
+        }] map:^(NSDictionary *rowDict) {
+            //NSLog(@"dictionary looks like: %@", rowDict);
+            NSError *ozoneError = nil;
+            return [[OWOzoneLevel alloc] initWithDictionary:rowDict error:&ozoneError];
+        }] array];
+        
     }];
 }
 

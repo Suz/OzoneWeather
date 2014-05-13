@@ -9,6 +9,7 @@
 #import "OWController.h"
 #import "OWManager.h"
 #import "OWCondition.h"
+#import "OWOzoneLevel.h"
 
 @interface OWController ()
 
@@ -157,6 +158,13 @@
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
          [self.tableView reloadData];
+     }];
+    
+    [[RACObserve([OWManager sharedManager], ozoneForecast)
+      deliverOn:RACScheduler.mainThreadScheduler]
+     subscribeNext:^(NSArray *newForecast){
+         iconView.backgroundColor = [[newForecast firstObject] dangerLevel];
+         NSLog(@"The clear sky uvIndex is: %@", [[newForecast firstObject] uvIndex]);
      }];
     
     [[OWManager sharedManager] findCurrentLocation];

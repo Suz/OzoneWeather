@@ -20,6 +20,7 @@
 @property (nonatomic, strong, readonly) OWCondition *currentCondition;
 @property (nonatomic, strong, readonly) NSArray *hourlyForecast;
 @property (nonatomic, strong, readonly) NSArray *dailyForecast;
+@property (nonatomic, strong, readonly) NSArray *ozoneForecast;
 
 -(void)findCurrentLocation;
 

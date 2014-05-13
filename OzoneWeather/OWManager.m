@@ -17,6 +17,7 @@
 @property (nonatomic, strong, readwrite) CLLocation *currentLocation;
 @property (nonatomic, strong, readwrite) NSArray *hourlyForecast;
 @property (nonatomic, strong, readwrite) NSArray *dailyForecast;
+@property (nonatomic, strong, readwrite) NSArray *ozoneForecast;
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) BOOL isFirstUpdate;
@@ -103,7 +104,7 @@
 
 -(RACSignal *)updateOzoneForecast {
     return [[self.client fetchOzoneForecastForLocation:self.currentLocation.coordinate] doNext:^(NSArray *conditions) {
-        self.dailyForecast = conditions;
+        self.ozoneForecast = conditions;
     }];
 }
 

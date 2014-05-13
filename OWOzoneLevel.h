@@ -6,13 +6,16 @@
 //  Copyright (c) 2014 Suzanne Kiihne. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-@import CoreLocation;
+#import <Mantle.h>
+#import "MTLModel.h"
 
-@interface OWOzoneLevel : NSObject
+@interface OWOzoneLevel : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic, copy) NSDate *ozoneDate;
-@property (nonatomic, copy) CLLocation *ozoneLocation;
-@property (nonatomic, copy) NSNumber *ozoneLevel;
+@property (nonatomic, strong) NSDate *ozoneDate;
+@property (nonatomic, strong) NSNumber *uvIndex;
+@property (nonatomic, strong) NSNumber *columnOzone;
+
+- (OWOzoneLevel *)initWithDictionary:(NSDictionary *)dict error:(NSError **)error;
+- (UIColor *)dangerLevel;
 
 @end
