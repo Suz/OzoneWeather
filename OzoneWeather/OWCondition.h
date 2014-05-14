@@ -23,6 +23,7 @@
 @property (nonatomic, strong) NSString *condition;
 @property (nonatomic, strong) NSNumber *windBearing;
 @property (nonatomic, strong) NSNumber *windSpeed;
+@property (nonatomic, strong) NSNumber *cloudCover;
 @property (nonatomic, strong) NSNumber *icon;
 
 - (NSString *)imageName;

@@ -55,11 +55,12 @@
              @"condition"       : @"weather.main",
              @"icon"            : @"weather.icon",
              @"windBearing"     : @"wind.deg",
-             @"windSpeed"       : @"wind.speed"
+             @"windSpeed"       : @"wind.speed",
+             @"cloudCover"      : @"clouds.all"
              };
 }
 
-// Value Transformations:
+# pragma mark ===========   Value Transformations:   =============
 
 + (NSValueTransformer *)dateJSONTransformer {
     return [MTLValueTransformer reversibleTransformerWithForwardBlock:^(NSString *str){
@@ -97,6 +98,12 @@
     } reverseBlock:^(NSNumber *speedMPH) {
         return @(speedMPH.floatValue/MPS_TO_MPH);
     }];
+}
+
+# pragma mark ===========   UV Extensions:   =============
+
+-(CGFloat)cloudFilter:(NSNumber *)cloudCover {
+    return (1.0 - 0.56 * cloudCover.floatValue);
 }
 
 @end
