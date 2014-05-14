@@ -27,6 +27,9 @@
 		F447CACD191CAD9B00262572 /* floatyclouds@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC6191CAD9B00262572 /* floatyclouds@2.png */; };
 		F447CACE191CAD9B00262572 /* partlySunny@2.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */; };
 		F447CACF191CAD9B00262572 /* partlySunny@2.png in Resources */ = {isa = PBXBuildFile; fileRef = F447CAC8191CAD9B00262572 /* partlySunny@2.png */; };
+		F48E837619240F0000632349 /* GrenaLib.c in Sources */ = {isa = PBXBuildFile; fileRef = F48E837419240F0000632349 /* GrenaLib.c */; };
+		F48E837919240F4600632349 /* STlib.c in Sources */ = {isa = PBXBuildFile; fileRef = F48E837719240F4600632349 /* STlib.c */; };
+		F48E837C19240F9400632349 /* OWSolarWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F48E837B19240F9400632349 /* OWSolarWrapper.m */; };
 		F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B124C191D49970008EAB0 /* OWOzoneLevel.m */; };
 		F49B1253191D533A0008EAB0 /* TFHpple.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1250191D533A0008EAB0 /* TFHpple.m */; };
 		F49B1254191D533A0008EAB0 /* TFHppleElement.m in Sources */ = {isa = PBXBuildFile; fileRef = F49B1252191D533A0008EAB0 /* TFHppleElement.m */; };
@@ -99,6 +102,12 @@
 		F447CAC6191CAD9B00262572 /* floatyclouds@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "floatyclouds@2.png"; sourceTree = "<group>"; };
 		F447CAC7191CAD9B00262572 /* partlySunny@2.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "partlySunny@2.jpg"; sourceTree = "<group>"; };
 		F447CAC8191CAD9B00262572 /* partlySunny@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "partlySunny@2.png"; sourceTree = "<group>"; };
+		F48E837419240F0000632349 /* GrenaLib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = GrenaLib.c; sourceTree = "<group>"; };
+		F48E837519240F0000632349 /* GrenaLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GrenaLib.h; sourceTree = "<group>"; };
+		F48E837719240F4600632349 /* STlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = STlib.c; sourceTree = "<group>"; };
+		F48E837819240F4600632349 /* STlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = STlib.h; sourceTree = "<group>"; };
+		F48E837A19240F9400632349 /* OWSolarWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWSolarWrapper.h; sourceTree = "<group>"; };
+		F48E837B19240F9400632349 /* OWSolarWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWSolarWrapper.m; sourceTree = "<group>"; };
 		F49B124B191D49970008EAB0 /* OWOzoneLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWOzoneLevel.h; sourceTree = "<group>"; };
 		F49B124C191D49970008EAB0 /* OWOzoneLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWOzoneLevel.m; sourceTree = "<group>"; };
 		F49B124F191D533A0008EAB0 /* TFHpple.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFHpple.h; sourceTree = "<group>"; };
@@ -204,6 +213,7 @@
 		F43AA5F7191C425400BCF1E5 /* OzoneWeather */ = {
 			isa = PBXGroup;
 			children = (
+				F48E837319240EC900632349 /* Astronomy */,
 				F43AA600191C425400BCF1E5 /* OWAppDelegate.h */,
 				F43AA601191C425400BCF1E5 /* OWAppDelegate.m */,
 				F427ACDB191C58530003A80C /* OWController.h */,
@@ -263,6 +273,19 @@
 			);
 			name = bkg_images;
 			path = ../bkg_images;
+			sourceTree = "<group>";
+		};
+		F48E837319240EC900632349 /* Astronomy */ = {
+			isa = PBXGroup;
+			children = (
+				F48E837719240F4600632349 /* STlib.c */,
+				F48E837819240F4600632349 /* STlib.h */,
+				F48E837419240F0000632349 /* GrenaLib.c */,
+				F48E837519240F0000632349 /* GrenaLib.h */,
+				F48E837A19240F9400632349 /* OWSolarWrapper.h */,
+				F48E837B19240F9400632349 /* OWSolarWrapper.m */,
+			);
+			name = Astronomy;
 			sourceTree = "<group>";
 		};
 		F49B124A191D49260008EAB0 /* Models */ = {
@@ -492,9 +515,12 @@
 				F49B1253191D533A0008EAB0 /* TFHpple.m in Sources */,
 				F43AA602191C425400BCF1E5 /* OWAppDelegate.m in Sources */,
 				F49B125F191D5E2C0008EAB0 /* OWManager.m in Sources */,
+				F48E837619240F0000632349 /* GrenaLib.c in Sources */,
 				F427ACDD191C58530003A80C /* OWController.m in Sources */,
 				F49B124D191D49970008EAB0 /* OWOzoneLevel.m in Sources */,
 				F43AA5FE191C425400BCF1E5 /* main.m in Sources */,
+				F48E837C19240F9400632349 /* OWSolarWrapper.m in Sources */,
+				F48E837919240F4600632349 /* STlib.c in Sources */,
 				F49B1262191D5E620008EAB0 /* OWCondition.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
