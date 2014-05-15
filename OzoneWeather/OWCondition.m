@@ -106,4 +106,6 @@
     return (1.0 - 0.56 * cloudCover.floatValue);
 }
 
+
+
 @end

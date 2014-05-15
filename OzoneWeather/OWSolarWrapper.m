@@ -13,13 +13,13 @@
 
 @interface OWSolarWrapper ()
 
-// should these be atomic?
-@property (readwrite) double julianDate;
-@property (readwrite) double julianCentury;
-@property (readwrite) double solarRightAscension;
-@property (readwrite) double solarDeclination;
-@property (readwrite) double equationOfTime;
-@property (readwrite) double earthSunDistance;
+// date functions
+-(NSNumber *) julianDateFor:(NSDate *)date;
+-(NSNumber *) julianCenturyForJulianDate:(NSNumber *)julianDate;
+-(NSNumber *) julianDateRelative2003For:(NSDate *)date;
+
+// basic astronomy calcs
+-(NSNumber *) equationOfTimeFor:(NSDate *)date;
 
 @end
 
@@ -29,6 +29,9 @@
 static NSString *const kJulianDateKey = @"kJulianDateKey";
 static NSString *const kSolarRightAscensionKey = @"kSolarRightAscensionKey";
 static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
+static NSString *const kSolarNoonKey = @"kSolarNoonKey";
+static NSString *const kSunriseKey = @"kSunriseKey";
+static NSString *const kSunsetKey = @"kSunsetKey";
 
 // Julian Date:
 // J2000 epoch is defined with JD = 2451545.0 for TT Jan 1 2000, noon GMT
@@ -114,19 +117,19 @@ static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
 }
 */
 
+#pragma mark ============== solar calculations (Grena paper) ==============
+
+// heliocentric and geocentric, but not topocentric
 -(NSDictionary *) solarParametersForDate:(NSDate *)date {
 	// need date relative 2003
     double julianDate = [self julianDateRelative2003For:date].floatValue;
-    //double julianCentury = [self julianCentury2003ForJulianDate:@(julianDate)].floatValue;
-	
-	
 	//NSLog(@"using julian %.4f",self.julianDate);
-	//double grenaJDE = (julianDate-2451545.0) - (365.0*2) + (65.984/86400);  // JD is referenced to 2000, JD_Grena to 2003;
     
-	double grenaHelioLong =calcHelioLongGrena(self.julianDate);
+	double grenaHelioLong =calcHelioLongGrena(julianDate);
 	//NSLog(@"Grena helio Longitude is %.4f",grenaHelioLong*180/M_PI);
+
 	datapair RA_Dec_Grena;
-	calcGeocentricGrena(self.julianDate, grenaHelioLong, &RA_Dec_Grena);
+	calcGeocentricGrena(julianDate, grenaHelioLong, &RA_Dec_Grena);
 	
 	double solarRightAscension = radToDeg(RA_Dec_Grena.a);
 	double solarDeclination = radToDeg(RA_Dec_Grena.b);
@@ -142,14 +145,15 @@ static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
     return results;
 }
 
-
+// topocentric calculations:  depend on observer's position on the planet
 -(NSDictionary *) solarAnglesForDate:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude {
     
-    // calculate S
+    // calculate orbital geometry stuff for this date
     NSDictionary *solarPosition = [self solarParametersForDate:date];
     
     //double grenaJDE = (julianDate-2451545.0) - (365.0*2) + (65.984/86400);
     //TODO:  check calculation WRT terrestrial time:  might be subtracting 65.984/86400 twice.
+
 	double earthTime = [[solarPosition objectForKey:kJulianDateKey] floatValue] + (65.984/86400);
 	//NSLog(@"using date %.4f",earthTime);
 	double localPressure = 1.00; // in atm
@@ -217,20 +221,31 @@ static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
     //
     //  Putting it all together, we get:
     //  ∆t ≈ C₁ sin M + A₂ sin(2 λSun)
-    //  ∆t = 1.9148 sin (−3.59° + 0.98560° d) + −2.4680 sin( 184.6946° + 5.745654 d )
-    // which at least has the right form in that it has two varying waves, out of phase with
-    // somewhat different frequencies.
+    //
+    // calculation approach checked in equation_of_time.ipynb
+    // including graphical comparison with nice graph at: http://aa.usno.navy.mil/faq/docs/eqtime.php
+    // (may 2014 srk)
     
     // get day of the year. In this case ordinal day is close enough.
     NSCalendar *currentCalendar = [NSCalendar currentCalendar];
     NSInteger dayOfYear = [currentCalendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:date];
+    // d
     double jd = 1.0 * dayOfYear;
-    double arg1 = (0.98560 * jd) - 3.59;
-    double arg2 = (5.745654 * jd) + 184.6946;
     
-    double delta_t = 1.9148 * sin( degToRad(arg1) ) - 2.4680 * sin( degToRad(arg2));
+    // M
+    double meanLongitude = degToRad( -3.59 + (0.98560 * jd) );
     
-    return @(delta_t);
+    // C
+    double eqOfCenter = degToRad(1.9148) * sin( meanLongitude ) +
+                        degToRad(0.0200) * sin( 2*meanLongitude ) +
+                        degToRad(0.0003) * sin( 3*meanLongitude );
+    
+    // lambda_sun
+    double eclipLongitude = M_PI + degToRad(102.9372) + meanLongitude + eqOfCenter;
+    
+    double eqOfTime =  degToRad(1.9148)*sin(meanLongitude) + degToRad(-2.4680)*sin( 2*eclipLongitude); // radians
+    
+    return @( 4*degToRad(eqOfTime) );   // return value in minutes:
 }
 
 - (NSDictionary *) sunTimesFor:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude {
@@ -238,38 +253,16 @@ static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
     // calculate Solar Parameters (geocentric, but not topocentric)
     NSDictionary *solarPosition = [self solarParametersForDate:date];
     
-    //double grenaJDE = [[solarPosition objectForKey:kJulianDateKey] floatValue];
-    //double geocRightAscension = [[solarPosition objectForKey:kSolarRightAscensionKey] floatValue];
     double geocDeclination = [[solarPosition objectForKey:kSolarDeclinationKey] floatValue];
-    //double obsLong = M_PI/180 * longitude.floatValue;
+
     double obsLat = M_PI/180 * latitude.floatValue;
-    
-    // set up next steps
-	//double nutationCorrection = 8.33e-5*sin(9.252e-4*grenaJDE - 1.173);
-	//double t_G = grenaJDE - (65.984 / 86400.0);
-    
-    // 3.6 Hour angle of the sun
-    // to restrict to 0-2pi, use HourAngle = fmod(hourAngle,2*PI);
-	//double localHourAngle = 6.30038809903*t_G + 4.8824623 + 0.9174*nutationCorrection + obsLong - geocRightAscension;
-	
-	//double s_HA = sin(localHourAngle);
-	//double c_HA = cos(localHourAngle);
-	
-    //double s_lat = sin(obsLat);
-	//double c_lat = cos(obsLat);
-    
-	//3.7 Parallax correction (delta_alpha)
-	//double parallax = -4.26e-5*c_lat*s_HA;
-    
-	//double topocentricDec = geocDeclination - 4.26e-5*(s_lat - geocDeclination*c_lat);
 
+    NSInteger timeZoneOffset = [[NSTimeZone defaultTimeZone] secondsFromGMTForDate:date];
+    float offset = timeZoneOffset/3600.0;  // difference from GMT in Hours
 
-        NSInteger timeZoneOffset = [[NSTimeZone defaultTimeZone] secondsFromGMTForDate:date];
-        float offset = timeZoneOffset/3600.0;  // difference from GMT in Hours
-
-        // calculate final values.
-        double haRise = radToDeg(acos( 0.99961723/cos(obsLat)*cos(geocDeclination)-tan(obsLat)*tan(geocDeclination) ));
-        //NSLog(@"The HA sunrise angle is %.4f.", haRise);
+    // calculate final values.
+    double haRise = radToDeg(acos( 0.99961723/cos(obsLat)*cos(geocDeclination)-tan(obsLat)*tan(geocDeclination) ));
+    //NSLog(@"The HA sunrise angle is %.4f.", haRise);
     
     double equationOfTime = [[self equationOfTimeFor:date] floatValue];
 
@@ -277,10 +270,10 @@ static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
     double riseTime = noonTime - haRise*4/1440;
     double setTime = noonTime + haRise*4/1440;
     
-    return @{ @"solarNoon"  :   @(noonTime),
-              @"sunrise"    :   @(riseTime),
-              @"sunset"     :   @(setTime)
-              };
+    return @{ kSolarNoonKey     :   @(noonTime),
+              kSunriseKey       :   @(riseTime),
+              kSunsetKey        :   @(setTime)
+            };
 }
 
 @end
