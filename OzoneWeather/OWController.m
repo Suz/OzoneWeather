@@ -90,7 +90,7 @@
     //top center
     UILabel *cityLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 20, self.view.bounds.size.width, 30)];
     cityLabel.backgroundColor = [UIColor clearColor];
-    cityLabel.textColor = [UIColor blackColor];
+    cityLabel.textColor = [UIColor whiteColor];
     cityLabel.text = @"Loading....";
     cityLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     cityLabel.textAlignment = NSTextAlignmentCenter;
@@ -99,7 +99,7 @@
     //center
     UILabel *temperatureLabel = [[UILabel alloc] initWithFrame:temperatureFrame];
     temperatureLabel.backgroundColor = [UIColor clearColor];
-    temperatureLabel.textColor = [UIColor blackColor];
+    temperatureLabel.textColor = [UIColor whiteColor];
     temperatureLabel.text = @"0°";
     temperatureLabel.font = [UIFont fontWithName:@"HelveticaNeue-UltraLight" size:120];
     [header addSubview:temperatureLabel];
@@ -107,7 +107,7 @@
     //bottom left
     UILabel *conditionsLabel = [[UILabel alloc] initWithFrame:conditionsFrame];
     conditionsLabel.backgroundColor = [UIColor clearColor];
-    conditionsLabel.textColor = [UIColor blackColor];
+    conditionsLabel.textColor = [UIColor whiteColor];
     conditionsLabel.text = @"Clear";
     conditionsLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     [header addSubview:conditionsLabel];
@@ -115,7 +115,7 @@
     //bottom left
     UILabel *hiLoLabel = [[UILabel alloc] initWithFrame:hiLoFrame];
     hiLoLabel.backgroundColor = [UIColor clearColor];
-    hiLoLabel.textColor = [UIColor blackColor];
+    hiLoLabel.textColor = [UIColor whiteColor];
     hiLoLabel.text = @"0° / 0°";
     hiLoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28];
     [header addSubview:hiLoLabel];
@@ -193,9 +193,9 @@
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.backgroundColor = [UIColor colorWithWhite:0 alpha:0.2];
-    cell.textLabel.textColor = [UIColor blackColor];
-    cell.detailTextLabel.textColor = [UIColor grayColor];
+    cell.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.detailTextLabel.textColor = [UIColor whiteColor];
     
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
