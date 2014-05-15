@@ -26,12 +26,19 @@
 @implementation OWSolarWrapper
 
 // Constants for passing information around:
-static NSString *const kJulianDateKey = @"kJulianDateKey";
-static NSString *const kSolarRightAscensionKey = @"kSolarRightAscensionKey";
-static NSString *const kSolarDeclinationKey = @"kSolarDeclinationKey";
-static NSString *const kSolarNoonKey = @"kSolarNoonKey";
-static NSString *const kSunriseKey = @"kSunriseKey";
-static NSString *const kSunsetKey = @"kSunsetKey";
+// TODO: (too many of these. simplify!)
+static NSString *const kJulianDateKey   =   @"kJulianDateKey";
+static NSString *const kSolarRightAscensionKey  =   @"kSolarRightAscensionKey";
+static NSString *const kSolarDeclinationKey     =   @"kSolarDeclinationKey";
+static NSString *const kSolarNoonKey    =   @"kSolarNoonKey";
+static NSString *const kSunriseKey      =   @"kSunriseKey";
+static NSString *const kSunsetKey       =   @"kSunsetKey";
+static NSString *const kDateKey         =   @"date";
+static NSString *const kLatitudeKey     =   @"latitude";
+static NSString *const kLongitudeKey    =   @"longitude";
+static NSString *const kZenithAngleKey  =   @"zenithAngle";
+static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
+
 
 // Julian Date:
 // J2000 epoch is defined with JD = 2451545.0 for TT Jan 1 2000, noon GMT
