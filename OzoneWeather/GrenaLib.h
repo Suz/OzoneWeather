@@ -45,5 +45,8 @@
 
 double calcHelioLongGrena(double grenaJDE); 
 void calcGeocentricGrena(double grenaJDE, double helioLong, datapair *RA_Dec);
+
+// observer latitude and longitude in degreees
+// return values in radians
 void calcTopocentricGrena(double grenaJDE, datapair *geocRA_Dec, datapair *observerLatLong, datapair *obsPT, datapair *zenAzi);
 

@@ -11,4 +11,6 @@
 
 @interface OWSolarWrapper : NSObject
 
+-(NSDictionary *)solarAnglesForDate:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude;
+
 @end
