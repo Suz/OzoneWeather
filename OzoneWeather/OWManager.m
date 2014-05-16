@@ -98,6 +98,7 @@
 
 -(RACSignal *)updateDailyForecast {
     return [[self.client fetchDailyForecastForLocation:self.currentLocation.coordinate] doNext:^(NSArray *conditions) {
+        NSLog(@"OWManager received Daily forecast array: %@", conditions);
         self.dailyForecast = conditions;
     }];
 }

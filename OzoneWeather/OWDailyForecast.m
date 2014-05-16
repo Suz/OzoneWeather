@@ -15,7 +15,7 @@
     
     paths[@"hiTemp"] = @"temp.max";
     paths[@"loTemp"] = @"temp.min";
-    
+    paths[@"cloudCover"] = @"clouds";
     return paths;
 }
 @end

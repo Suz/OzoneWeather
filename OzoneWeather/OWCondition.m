@@ -86,6 +86,10 @@
     }];
 }
 
++(NSValueTransformer *)conditionJSONTransformer {
+    return [self conditionDescriptionJSONTransformer];
+}
+
 + (NSValueTransformer *)iconJSONTransformer {
     return [self conditionDescriptionJSONTransformer];
 }
@@ -105,7 +109,6 @@
 -(CGFloat)cloudFilter:(NSNumber *)cloudCover {
     return (1.0 - 0.56 * cloudCover.floatValue);
 }
-
 
 
 @end

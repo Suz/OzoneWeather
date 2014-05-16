@@ -88,14 +88,14 @@
         RACSequence *list = [json[@"list"] rac_sequence];
         
         //and map the sequence elements
-        return [[list map:^(NSDictionary *json){
+        return [[list map:^(NSDictionary *item){
             //from json objects to an array OWConditions objects using the adapter. whew.
-            return [MTLJSONAdapter modelOfClass:[OWCondition class] fromJSONDictionary:json error:nil];
+            return [MTLJSONAdapter modelOfClass:[OWCondition class] fromJSONDictionary:item error:nil];
         }] array];
         
     }];
 }
-
+/*
 -(RACSignal *)fetchDailyForecastForLocation:(CLLocationCoordinate2D)coordinate {
     // create the weather data url request string
     NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/forecast/daily?lat=%f&lon=%f&units=imperial&cnt=7",coordinate.latitude, coordinate.longitude];
@@ -108,11 +108,32 @@
         RACSequence *list = [json[@"list"] rac_sequence];
         
         //and map the sequence elements
-        return [[list map:^(NSDictionary *json){
+        return [[list map:^(NSDictionary *item){
+            NSLog(@"Daily forecast dictionary data: %@", item);
             //from json objects to an array OWDailyForecast objects using the Mantle whew.
-            return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:json error:nil];
+            
+            return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:item error:nil];
         }] array];
+    }];
+}
+*/
+
+// copied from simpleweather
+- (RACSignal *)fetchDailyForecastForLocation:(CLLocationCoordinate2D)coordinate {
+    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/forecast/daily?lat=%f&lon=%f&units=imperial&cnt=7",coordinate.latitude, coordinate.longitude];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    // Use the generic fetch method and map results to convert into an array of Mantle objects
+    return [[self fetchJSONFromURL:url] map:^(NSDictionary *json) {
+        // build a sequence from the lst of raw JSON
+        RACSequence *list = [json[@"list"] rac_sequence];
         
+        // Use a function to map results from JSON to Mantle objects
+        return [[list map:^(NSDictionary *item) {
+            //NSLog(@"Daily forecast data dictionary: %@", item);
+            //return ([NSString stringWithFormat:@"This is a test %@", item]);
+            return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:item error:nil];
+        }] array];
     }];
 }
 

@@ -151,12 +151,14 @@
     [[RACObserve([OWManager sharedManager], hourlyForecast)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
+         NSLog(@"The first houly forecast is: %@", [newForecast firstObject]);
          [self.tableView reloadData];
      }];
     
     [[RACObserve([OWManager sharedManager], dailyForecast)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
+         NSLog(@"The first daily forecast is: %@", [newForecast firstObject]);
          [self.tableView reloadData];
      }];
     
