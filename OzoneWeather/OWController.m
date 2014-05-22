@@ -8,8 +8,8 @@
 
 #import "OWController.h"
 #import "OWManager.h"
-#import "OWCondition.h"
-#import "OWOzoneLevel.h"
+#import "OWViewManager.h"
+#import "OWViewData.h"
 
 @interface OWController ()
 
@@ -130,46 +130,38 @@
     
     [self.view addSubview:self.tableView];
     
-    [[RACObserve([OWManager sharedManager], currentCondition)
+    [[RACObserve([OWViewManager sharedManager], currentData)
       deliverOn:RACScheduler.mainThreadScheduler]
-     subscribeNext:^(OWCondition *newCondition){
-         temperatureLabel.text = [NSString stringWithFormat:@"%.0f°",newCondition.temperature.floatValue];
-         conditionsLabel.text = [newCondition.conditionDescription capitalizedString];
-         cityLabel.text = [newCondition.locationName capitalizedString];
+     subscribeNext:^(OWViewData *newCurrentData){
+         temperatureLabel.text = [NSString stringWithFormat:@"%.0f°",newCurrentData.temperature.floatValue];
+         conditionsLabel.text = [newCurrentData.conditionDescription capitalizedString];
+         cityLabel.text = [newCurrentData.locationName capitalizedString];
          
-         iconView.image = [UIImage imageNamed:[newCondition imageName]];
+         iconView.image = [UIImage imageNamed:[newCurrentData weatherImageName]];
      }];
     
     RAC(hiLoLabel, text) = [[RACSignal combineLatest:@[
-                                    RACObserve([OWManager sharedManager],currentCondition.hiTemp),
-                                    RACObserve([OWManager sharedManager], currentCondition.loTemp)]
+                                    RACObserve([OWViewManager sharedManager], currentData.hiTemp),
+                                    RACObserve([OWViewManager sharedManager], currentData.loTemp)]
                                     reduce:^(NSNumber *hi, NSNumber *low){
                                             return [NSString stringWithFormat:@"%.0f° / %.0f°", hi.floatValue, low.floatValue];
                                     }]
                             deliverOn:RACScheduler.mainThreadScheduler];
     
-    [[RACObserve([OWManager sharedManager], hourlyForecast)
+    [[RACObserve([OWViewManager sharedManager], hourlyData)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
-         NSLog(@"The first houly forecast is: %@", [newForecast firstObject]);
          [self.tableView reloadData];
      }];
     
-    [[RACObserve([OWManager sharedManager], dailyForecast)
+    [[RACObserve([OWViewManager sharedManager], dailyData)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
-         NSLog(@"The first daily forecast is: %@", [newForecast firstObject]);
          [self.tableView reloadData];
-     }];
-    
-    [[RACObserve([OWManager sharedManager], ozoneForecast)
-      deliverOn:RACScheduler.mainThreadScheduler]
-     subscribeNext:^(NSArray *newForecast){
-         iconView.backgroundColor = [[newForecast firstObject] dangerLevel];
-         NSLog(@"The clear sky uvIndex is: %@", [[newForecast firstObject] uvIndex]);
      }];
     
     [[OWManager sharedManager] findCurrentLocation];
+   
 }
 
 -(void)viewWillLayoutSubviews {
@@ -188,10 +180,10 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0){
-        return MIN([[OWManager sharedManager].hourlyForecast count], 6) + 1;
+        return MIN([[OWViewManager sharedManager].hourlyData count], 6) + 1;
     }
     
-    return MIN([[OWManager sharedManager].dailyForecast count], 6) + 1;
+    return MIN([[OWViewManager sharedManager].dailyData count], 6) + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -211,14 +203,14 @@
         if (indexPath.row == 0) {
             [self configureHeaderCell:cell title:@"Hourly Forecast"];
         } else {
-            OWCondition *weather = [OWManager sharedManager].hourlyForecast[indexPath.row - 1];
+            OWViewData *weather = [OWViewManager sharedManager].hourlyData[indexPath.row - 1];
             [self configureHourlyCell:cell withWeather: weather];
         }
     } else if (indexPath.section == 1) {
         if (indexPath.row == 0) {
             [self configureHeaderCell:cell title:@"Daily Forecast"];
         } else {
-            OWCondition *weather = [OWManager sharedManager].dailyForecast[indexPath.row - 1];
+            OWViewData *weather = [OWViewManager sharedManager].dailyData[indexPath.row - 1];
             [self configureDailyCell:cell withWeather: weather];
         }
     }
@@ -233,21 +225,21 @@
     cell.imageView.image = nil;
 }
 
--(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWCondition *)weather {
+-(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
     cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
-    cell.imageView.image = [UIImage imageNamed:[weather imageName]];
+    cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
 }
 
--(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWCondition *)weather {
+-(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
     cell.textLabel.text = [self.dailyFormatter stringFromDate:weather.date];
     cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.hiTemp.floatValue, weather.loTemp.floatValue];
-    cell.imageView.image = [UIImage imageNamed:[weather imageName]];
+    cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
 }
 

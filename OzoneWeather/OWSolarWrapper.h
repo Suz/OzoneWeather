@@ -11,7 +11,13 @@
 
 @interface OWSolarWrapper : NSObject
 
+extern NSString *const kZenithAngleKey;
+extern NSString *const kAzimuthAngleKey;
+extern NSString *const kSunriseKey;
+extern NSString *const kSunsetKey;
+
 -(NSDictionary *) solarAnglesForDate:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude;
 -(NSDictionary *) sunTimesFor:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude;
+-(NSNumber *)earthSunDistanceFor:(NSDate *)date;
 
 @end

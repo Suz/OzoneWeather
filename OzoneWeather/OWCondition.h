@@ -17,6 +17,8 @@
 @property (nonatomic, strong) NSNumber *hiTemp;
 @property (nonatomic, strong) NSNumber *loTemp;
 @property (nonatomic, strong) NSString *locationName;
+@property (nonatomic, strong) NSNumber *latitude;
+@property (nonatomic, strong) NSNumber *longitude;
 @property (nonatomic, strong) NSDate *sunrise;
 @property (nonatomic, strong) NSDate *sunset;
 @property (nonatomic, strong) NSString *conditionDescription;
@@ -25,8 +27,5 @@
 @property (nonatomic, strong) NSNumber *windSpeed;
 @property (nonatomic, strong) NSNumber *cloudCover;
 @property (nonatomic, strong) NSNumber *icon;
-
-- (NSString *)imageName;
-
 
 @end

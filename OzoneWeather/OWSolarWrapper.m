@@ -20,6 +20,7 @@
 
 // basic astronomy calcs
 -(NSNumber *) equationOfTimeFor:(NSDate *)date;
+-(NSDictionary *) solarParametersForDate:(NSDate *)date;
 
 @end
 
@@ -31,13 +32,13 @@ static NSString *const kJulianDateKey   =   @"kJulianDateKey";
 static NSString *const kSolarRightAscensionKey  =   @"kSolarRightAscensionKey";
 static NSString *const kSolarDeclinationKey     =   @"kSolarDeclinationKey";
 static NSString *const kSolarNoonKey    =   @"kSolarNoonKey";
-static NSString *const kSunriseKey      =   @"kSunriseKey";
-static NSString *const kSunsetKey       =   @"kSunsetKey";
+NSString *const kSunriseKey      =   @"kSunriseKey";
+NSString *const kSunsetKey       =   @"kSunsetKey";
 static NSString *const kDateKey         =   @"date";
 static NSString *const kLatitudeKey     =   @"latitude";
 static NSString *const kLongitudeKey    =   @"longitude";
-static NSString *const kZenithAngleKey  =   @"zenithAngle";
-static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
+NSString *const kZenithAngleKey  =   @"zenithAngle";
+NSString *const kAzimuthAngleKey =   @"azimuthAngle";
 
 
 // Julian Date:
@@ -46,7 +47,7 @@ static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
 // Mac standard time is based on UTC Jan 1 2001, 00:00:00. This is
 // 364.5 days after the definition of J2000.
 // Note: Grena's calculations are based on a Julian date referenced to 2003!
--(NSNumber *) julianDateFor:(NSDate *)date {
+-(NSNumber *)julianDateFor:(NSDate *)date {
     
     // referenced to Jan 1, 2000
 	CFAbsoluteTime dateNum = CFDateGetAbsoluteTime( (CFDateRef) date);
@@ -56,7 +57,7 @@ static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     return @(julianDate);
 }
 
--(NSNumber *) julianCenturyForJulianDate:(NSNumber *)julianDate {
+-(NSNumber *)julianCenturyForJulianDate:(NSNumber *)julianDate {
     
     // referenced to Jan 1, 2000
     double julianCentury = (julianDate.floatValue-2451545.0) / 36525;
@@ -64,7 +65,7 @@ static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     return @(julianCentury);
 }
 
--(NSNumber *) julianDateRelative2003For:(NSDate *)date {
+-(NSNumber *)julianDateRelative2003For:(NSDate *)date {
 	
     // number of seconds since Jan 1, 2001 00:00:00
 	CFAbsoluteTime ThisTime = CFDateGetAbsoluteTime( (CFDateRef) date);
@@ -123,6 +124,27 @@ static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     
 }
 */
+
+/* simple algorithm for computing the Sun's angular coordinates to an 
+ * accuracy of about 1 arcminute within two centuries of 2000.
+ *
+ * http://aa.usno.navy.mil/faq/docs/SunApprox.php
+ * Julian Date (rel 2000): D = JD – 2451545.0
+ * Mean anomaly of the Sun:	g = 357.529 + 0.98560028 D
+ * earth-sun distance: R = 1.00014 – 0.01671 cos g – 0.00014 cos 2g
+ *
+ */
+
+-(NSNumber *)earthSunDistanceFor:(NSDate *)date{
+    
+    double julianDate = [self julianDateFor:date].floatValue;
+    double meanAnomaly = 357.529 + 0.98560028 * julianDate;
+    double radius = 1.00014 - 0.01671 * cos(degToRad(meanAnomaly)) - 0.00014*cos(degToRad(2*meanAnomaly));
+    
+    return @(radius);
+}
+
+
 
 #pragma mark ============== solar calculations (Grena paper) ==============
 
@@ -233,15 +255,18 @@ static NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     // including graphical comparison with nice graph at: http://aa.usno.navy.mil/faq/docs/eqtime.php
     // (may 2014 srk)
     
-    // get day of the year. In this case ordinal day is close enough.
-    NSCalendar *currentCalendar = [NSCalendar currentCalendar];
-    NSInteger dayOfYear = [currentCalendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:date];
+    // get day of the year. In this case ordinal day is close enough.  but easy enough to go with more accurate version as well...
+//   NSCalendar *currentCalendar = [NSCalendar currentCalendar];
+//   NSInteger dayOfYear = [currentCalendar ordinalityOfUnit:NSDayCalendarUnit inUnit:NSYearCalendarUnit forDate:date];
+    
     // d
-    double jd = 1.0 * dayOfYear;
+//  double jd = 1.0 * dayOfYear;
+    double jd = [self julianDateFor:date].floatValue;
     
-    // M
-    double meanLongitude = degToRad( -3.59 + (0.98560 * jd) );
-    
+    // M   --- called meanAnomaly elsewhere.
+//  double meanLongitude = degToRad( -3.59 + (0.98560 * jd) );
+    double meanLongitude = 357.529 + 0.98560028 * jd;
+
     // C
     double eqOfCenter = degToRad(1.9148) * sin( meanLongitude ) +
                         degToRad(0.0200) * sin( 2*meanLongitude ) +

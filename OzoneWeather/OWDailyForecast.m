@@ -18,4 +18,5 @@
     paths[@"cloudCover"] = @"clouds";
     return paths;
 }
+
 @end

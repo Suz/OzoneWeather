@@ -16,6 +16,5 @@
 @property (nonatomic, strong) NSNumber *columnOzone;
 
 - (OWOzoneLevel *)initWithDictionary:(NSDictionary *)dict error:(NSError **)error;
-- (UIColor *)dangerLevel;
 
 @end

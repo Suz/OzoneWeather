@@ -40,6 +40,7 @@
     [temisDateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [temisDateFormatter setDateFormat:@"d MMM yyyy"];
 
+    //TODO: improve this by using constant strings for dictionary keys!
     for (NSString *key in dict) {
         if ([key rangeOfString:@"date" options:NSCaseInsensitiveSearch].location != NSNotFound) {
             // found the date
@@ -65,28 +66,6 @@
              @"columnOzone"     : @"columnOzone",
              @"uvIndex"         : @"uvIndex"
              };
-}
-
-- (UIColor *)dangerLevel {
-    
-    CGFloat num = self.uvIndex.floatValue;
-    if (num < 2) {
-        // very low. no chance of sunburn
-        return [UIColor colorWithRed:0 green:1 blue:0 alpha:0.2];
-    } else if (num < 4) {
-        // low, little chance
-        return [UIColor colorWithRed:0 green:1 blue:0 alpha:0.2];
-    } else if (num < 6) {
-        // mid, some chance
-        return [UIColor colorWithRed:0.3 green:0.7 blue:0 alpha:0.2];
-    } else if (num < 8) {
-        // low, little chance
-        return [UIColor colorWithRed:0.5 green:0.5 blue:0 alpha:0.2];
-    } else if (num < 10) {
-        // high
-        return [UIColor colorWithRed:0.7 green:0.1 blue:0 alpha:0.5];
-    }  // will only reach here if extreme!
-    return [UIColor colorWithRed:1 green:0 blue:0 alpha:0];
 }
 
 @end

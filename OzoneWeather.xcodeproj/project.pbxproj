@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		346C0F4503DA4D5F930FD70C /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF47044CB4764E148D85C22D /* libPods.a */; };
+		F40645F919269D57007A5946 /* OWViewManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F40645F819269D57007A5946 /* OWViewManager.m */; };
+		F40645FC1926A089007A5946 /* OWViewData.m in Sources */ = {isa = PBXBuildFile; fileRef = F40645FB1926A089007A5946 /* OWViewData.m */; };
 		F427ACDD191C58530003A80C /* OWController.m in Sources */ = {isa = PBXBuildFile; fileRef = F427ACDC191C58530003A80C /* OWController.m */; };
 		F43AA5F2191C425400BCF1E5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43AA5F1191C425400BCF1E5 /* Foundation.framework */; };
 		F43AA5F4191C425400BCF1E5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F43AA5F3191C425400BCF1E5 /* CoreGraphics.framework */; };
@@ -78,6 +80,10 @@
 /* Begin PBXFileReference section */
 		861DCFD3F28F4FDABBE391F5 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		AF47044CB4764E148D85C22D /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		F40645F719269D57007A5946 /* OWViewManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWViewManager.h; sourceTree = "<group>"; };
+		F40645F819269D57007A5946 /* OWViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWViewManager.m; sourceTree = "<group>"; };
+		F40645FA1926A089007A5946 /* OWViewData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWViewData.h; sourceTree = "<group>"; };
+		F40645FB1926A089007A5946 /* OWViewData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWViewData.m; sourceTree = "<group>"; };
 		F427ACDB191C58530003A80C /* OWController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWController.h; sourceTree = "<group>"; };
 		F427ACDC191C58530003A80C /* OWController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWController.m; sourceTree = "<group>"; };
 		F43AA5EE191C425400BCF1E5 /* OzoneWeather.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OzoneWeather.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -220,6 +226,8 @@
 				F427ACDC191C58530003A80C /* OWController.m */,
 				F49B125A191D5E020008EAB0 /* OWClient.h */,
 				F49B125B191D5E020008EAB0 /* OWClient.m */,
+				F40645F719269D57007A5946 /* OWViewManager.h */,
+				F40645F819269D57007A5946 /* OWViewManager.m */,
 				F49B125D191D5E2C0008EAB0 /* OWManager.h */,
 				F49B125E191D5E2C0008EAB0 /* OWManager.m */,
 				F49B124A191D49260008EAB0 /* Models */,
@@ -297,6 +305,8 @@
 				F49B1261191D5E620008EAB0 /* OWCondition.m */,
 				F49B1263191D5E930008EAB0 /* OWDailyForecast.h */,
 				F49B1264191D5E930008EAB0 /* OWDailyForecast.m */,
+				F40645FA1926A089007A5946 /* OWViewData.h */,
+				F40645FB1926A089007A5946 /* OWViewData.m */,
 			);
 			name = Models;
 			path = ..;
@@ -510,10 +520,12 @@
 			files = (
 				F49B1265191D5E930008EAB0 /* OWDailyForecast.m in Sources */,
 				F49B1254191D533A0008EAB0 /* TFHppleElement.m in Sources */,
+				F40645FC1926A089007A5946 /* OWViewData.m in Sources */,
 				F49B1257191D535D0008EAB0 /* XPathQuery.m in Sources */,
 				F49B125C191D5E020008EAB0 /* OWClient.m in Sources */,
 				F49B1253191D533A0008EAB0 /* TFHpple.m in Sources */,
 				F43AA602191C425400BCF1E5 /* OWAppDelegate.m in Sources */,
+				F40645F919269D57007A5946 /* OWViewManager.m in Sources */,
 				F49B125F191D5E2C0008EAB0 /* OWManager.m in Sources */,
 				F48E837619240F0000632349 /* GrenaLib.c in Sources */,
 				F427ACDD191C58530003A80C /* OWController.m in Sources */,

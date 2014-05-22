@@ -16,6 +16,9 @@
 
 @property (nonatomic,strong) NSURLSession *session;
 
+- (RACSignal *)fetchJSONFromURL:(NSURL *)url;
+- (RACSignal *)fetchHTMLFromURL:(NSURL *)url;
+
 @end
 
 @implementation OWClient
@@ -29,6 +32,8 @@
 }
 
 -(RACSignal *)fetchJSONFromURL:(NSURL *)url {
+    
+    NSLog(@"Fetching: %@", url.absoluteString);
     
     // factory method:  creates signal for other objects to use
     return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
@@ -63,7 +68,7 @@
     }];
 }
 
-//TODO:  there's a lot of repetition in the next three methods. The things that change are the url strings, the model to return, and whether or not the data is a single dictionary (current conditions) or an array (hourly or daily forecasts). These could be abstracted out of a single fetch method.
+//TODO:  there's a lot of repetition in the next three methods. The things that change are the url strings, the model to return, and whether or not the data is a single dictionary (current conditions) or an array (hourly or daily forecasts). These could be abstracted out of a single fetch method.  ... also, errors in the MTLJSONAdaptor are not handled. This should change!
 
 -(RACSignal *)fetchCurrentConditionsForLocation:(CLLocationCoordinate2D)coordinate {
     // create the weather data url request string
@@ -95,30 +100,7 @@
         
     }];
 }
-/*
--(RACSignal *)fetchDailyForecastForLocation:(CLLocationCoordinate2D)coordinate {
-    // create the weather data url request string
-    NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/forecast/daily?lat=%f&lon=%f&units=imperial&cnt=7",coordinate.latitude, coordinate.longitude];
-    NSURL *url = [NSURL URLWithString:urlString];
-    
-    // create the RACSignal,
-    return [[self fetchJSONFromURL:url] map:^(NSDictionary *json) {
-        
-        //build a sequence from the list of raw json
-        RACSequence *list = [json[@"list"] rac_sequence];
-        
-        //and map the sequence elements
-        return [[list map:^(NSDictionary *item){
-            NSLog(@"Daily forecast dictionary data: %@", item);
-            //from json objects to an array OWDailyForecast objects using the Mantle whew.
-            
-            return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:item error:nil];
-        }] array];
-    }];
-}
-*/
 
-// copied from simpleweather
 - (RACSignal *)fetchDailyForecastForLocation:(CLLocationCoordinate2D)coordinate {
     NSString *urlString = [NSString stringWithFormat:@"http://api.openweathermap.org/data/2.5/forecast/daily?lat=%f&lon=%f&units=imperial&cnt=7",coordinate.latitude, coordinate.longitude];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -130,8 +112,6 @@
         
         // Use a function to map results from JSON to Mantle objects
         return [[list map:^(NSDictionary *item) {
-            //NSLog(@"Daily forecast data dictionary: %@", item);
-            //return ([NSString stringWithFormat:@"This is a test %@", item]);
             return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:item error:nil];
         }] array];
     }];
@@ -177,6 +157,8 @@
     }];
 }
 
+
+
 // about separation of concerns:  Ideally, all the details about the Temis Ozone format should be in the OzoneLevel object, but for ozone, there are two stages: 1) extracting the elements from the html page with XPath, and 2) parsing the elements into the model. I'm going to put step 1 here and step 2 in the model. The output of step 1 will be a dictionary correpsonding to the elements needed by the model.
 
 // dom model for temis data:
@@ -185,27 +167,11 @@
 //tr -> 3x td -> (headers as <i>) Date, UV index, ozone
 //tr -> 3x td -> (data values) day Month year, .1f, .1f DU
 
-
-
-
 -(RACSignal *)fetchOzoneForecastForLocation:(CLLocationCoordinate2D)coordinate {
     // create the weather data url request string
     NSString *urlString = [NSString stringWithFormat:@"http://www.temis.nl/uvradiation/nrt/uvindex.php?lat=%f&lon=%f",coordinate.latitude, coordinate.longitude];
     NSURL *url = [NSURL URLWithString:urlString];
     
-    // create the RACSignal, and map the results  from a json object (dictionary) to an instance of OWCondition using the adapter. whew.
-    
-/*    return [[self fetchHTMLFromURL:url] map:^(TFHpple *doc) {
-        NSString *ozoneDataXpathQueryString = @"//dd//td";  // how do I test this?
-        ///dd/table/tbody/tr/td
-        // attempt #1:  just return the array elements produced by the XPATH query...
-        //NSArray *ozoneNodes = [doc searchWithXPathQuery:@"//td"];
-        NSArray *ozoneNodes = [doc searchWithXPathQuery:ozoneDataXpathQueryString];
-        NSLog(@"Looking for %@, found %@",ozoneDataXpathQueryString, ozoneNodes);
-        
-        return [doc searchWithXPathQuery:ozoneDataXpathQueryString];
-    }];
-*/
     // create the RACSignal,
     return [[self fetchHTMLFromURL:url] map:^(TFHpple *doc) {
         
@@ -241,6 +207,7 @@
         
     }];
 }
+
 
 
 @end

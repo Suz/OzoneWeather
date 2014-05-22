@@ -22,6 +22,11 @@
 @property (nonatomic, strong, readonly) NSArray *dailyForecast;
 @property (nonatomic, strong, readonly) NSArray *ozoneForecast;
 
+//- (RACSignal *)currentConditions;
+//- (RACSignal *)hourlyConditions;
+//- (RACSignal *)dailyConditions;
+//- (RACSignal *)ozoneConditions;
+
 -(void)findCurrentLocation;
 
 @end
