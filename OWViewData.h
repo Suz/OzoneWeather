@@ -27,6 +27,7 @@
 @property (nonatomic, copy, readonly) NSString *uvIndex; // filtered by weather.
 @property (nonatomic, copy, readonly) NSString *vitaminDTime;
 //@property (nonatomic, copy, readonly) NSString *UVADanger;
+@property (nonatomic, strong) NSNumber *icon;
 
 -(id)initWithConditions:(OWCondition *)conditionsData andOzone:(OWOzoneLevel *)ozoneData;
 

@@ -15,6 +15,7 @@ extern NSString *const kZenithAngleKey;
 extern NSString *const kAzimuthAngleKey;
 extern NSString *const kSunriseKey;
 extern NSString *const kSunsetKey;
+extern NSString *const kSolarNoonKey;
 
 -(NSDictionary *) solarAnglesForDate:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude;
 -(NSDictionary *) sunTimesFor:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude;

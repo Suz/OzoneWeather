@@ -87,18 +87,19 @@
     NSURL *url = [NSURL URLWithString:urlString];
     
     // create the RACSignal,
-    return [[self fetchJSONFromURL:url] map:^(NSDictionary *json) {
-        
-        //and collect the results in an sequence
-        RACSequence *list = [json[@"list"] rac_sequence];
-        
-        //and map the sequence elements
-        return [[list map:^(NSDictionary *item){
-            //from json objects to an array OWConditions objects using the adapter. whew.
-            return [MTLJSONAdapter modelOfClass:[OWCondition class] fromJSONDictionary:item error:nil];
-        }] array];
-        
-    }];
+    return [[self fetchJSONFromURL:url]
+                map:^(NSDictionary *json) {
+            
+                    //and collect the results in an sequence
+                    RACSequence *list = [json[@"list"] rac_sequence];
+                    
+                    //and map the sequence elements
+                    return [[list map:^(NSDictionary *item){
+                        //from json objects to an array OWConditions objects using the adapter. whew.
+                        return [MTLJSONAdapter modelOfClass:[OWCondition class] fromJSONDictionary:item error:nil];
+                    }]
+                array];
+            }];
 }
 
 - (RACSignal *)fetchDailyForecastForLocation:(CLLocationCoordinate2D)coordinate {
@@ -106,15 +107,16 @@
     NSURL *url = [NSURL URLWithString:urlString];
     
     // Use the generic fetch method and map results to convert into an array of Mantle objects
-    return [[self fetchJSONFromURL:url] map:^(NSDictionary *json) {
-        // build a sequence from the lst of raw JSON
-        RACSequence *list = [json[@"list"] rac_sequence];
-        
-        // Use a function to map results from JSON to Mantle objects
-        return [[list map:^(NSDictionary *item) {
-            return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:item error:nil];
-        }] array];
-    }];
+    return [[self fetchJSONFromURL:url]
+             map:^(NSDictionary *json) {
+                    // build a sequence from the lst of raw JSON
+                    RACSequence *list = [json[@"list"] rac_sequence];
+                    
+                    // Use a function to map results from JSON to Mantle objects
+                    return [[list map:^(NSDictionary *item) {
+                        return [MTLJSONAdapter modelOfClass:[OWDailyForecast class] fromJSONDictionary:item error:nil];
+                    }] array];
+              }];
 }
 
 #pragma-mark ======   TEMIS Ozone Functions ============
@@ -167,9 +169,9 @@
 //tr -> 3x td -> (headers as <i>) Date, UV index, ozone
 //tr -> 3x td -> (data values) day Month year, .1f, .1f DU
 
--(RACSignal *)fetchOzoneForecastForLocation:(CLLocationCoordinate2D)coordinate {
+-(RACSignal *)fetchOzoneForecastForLocation:(CLLocation *)location {
     // create the weather data url request string
-    NSString *urlString = [NSString stringWithFormat:@"http://www.temis.nl/uvradiation/nrt/uvindex.php?lat=%f&lon=%f",coordinate.latitude, coordinate.longitude];
+    NSString *urlString = [NSString stringWithFormat:@"http://www.temis.nl/uvradiation/nrt/uvindex.php?lat=%f&lon=%f",location.coordinate.latitude, location.coordinate.longitude];
     NSURL *url = [NSURL URLWithString:urlString];
     
     // create the RACSignal,
@@ -197,8 +199,9 @@
         }] filter:^BOOL(NSArray *rowArray) {
             return rowArray.count > 0;
         }] map:^(NSArray *rowArray) {
-            //NSLog(@"%@", rowArray);
-            return [NSDictionary dictionaryWithObjects:rowArray forKeys:@[@"date", @"uvIndex", @"columnOzone"]];
+            NSArray *temp = [rowArray arrayByAddingObject:location];
+            //NSLog(@"%@", temp);
+            return [NSDictionary dictionaryWithObjects:temp forKeys:@[kOzoneDateKey, kUVIndexKey, kColumnOzoneKey, kLocationKey]];
         }] map:^(NSDictionary *rowDict) {
             //NSLog(@"dictionary looks like: %@", rowDict);
             NSError *ozoneError = nil;

@@ -12,7 +12,6 @@
 @interface OWViewData ()
 
 // private properties and methods for transforming data
-@property (nonatomic, strong) NSNumber *icon;
 
 -(double) uvIndexForOzone:(NSNumber *)ozone ZenithAngle:(NSNumber *)zenith andDistance:(NSNumber *)distance;
 -(double) erythIrradianceForUVIndex:(NSNumber *)uvindex;
@@ -38,22 +37,13 @@
     _locationName   = conditionsData.locationName;
     _conditionDescription = conditionsData.conditionDescription;
     _condition      = conditionsData.condition;
+    _icon           = conditionsData.icon;
     
-    
-    // UVI
-    // neeed the zenith angle for the date: condition.date
+    // Set up astronomy calculations:
     OWSolarWrapper *calculator = [[OWSolarWrapper alloc] init];
     
-    NSDictionary *solarAngles = [calculator solarAnglesForDate:conditionsData.date
-                                                    atLatitude:conditionsData.latitude
-                                                  andLongitude:conditionsData.longitude];
-    
-    double zenithAngle = [[solarAngles objectForKey:kZenithAngleKey] floatValue];
-    
-    double earthSunDistance = [calculator earthSunDistanceFor:conditionsData.date].floatValue;
-    
-    //sunset, sunrise,
-    NSDictionary *sunTimes = [calculator sunTimesFor:conditionsData.date
+    //sunset, sunrise:  use ozone date (~local solar noon)
+    NSDictionary *sunTimes = [calculator sunTimesFor:ozoneData.ozoneDate
                                           atLatitude:conditionsData.latitude
                                         andLongitude:conditionsData.longitude];
     
@@ -64,14 +54,35 @@
         NSLog(@"Error: calculated sunrise at %@, but openweather sunrise at %@", _sunrise, conditionsData.sunrise);
     }
 
-    // clear sky UV Index
+    // UVI: TEMIS reports max for today. Also want current value.
+    double earthSunDistance = [calculator earthSunDistanceFor:ozoneData.ozoneDate].floatValue;
+    
+    NSDictionary *noonSolarAngles = [calculator solarAnglesForDate:ozoneData.ozoneDate
+                                                        atLatitude:conditionsData.latitude
+                                                      andLongitude:conditionsData.longitude];
+    
+    double noonZenithAngle = [[noonSolarAngles objectForKey:kZenithAngleKey] floatValue];
+    // Maximum clear sky UV Index (solar noon)
+    double maxUVIndex = [self uvIndexForOzone:ozoneData.columnOzone
+                                   ZenithAngle:@(noonZenithAngle)
+                                   andDistance:@(earthSunDistance)];
+
+    if (abs(maxUVIndex - ozoneData.uvIndex.floatValue) > 0.3) {
+        NSLog(@"Error: UV Index values differ. calculate %0.1f vs TEMIS %@", maxUVIndex, ozoneData.uvIndex);
+    }
+
+    // UV Index for current time.
+    NSDictionary *solarAngles = [calculator solarAnglesForDate:conditionsData.date
+                                                    atLatitude:conditionsData.latitude
+                                                  andLongitude:conditionsData.longitude];
+    
+    double zenithAngle = [[solarAngles objectForKey:kZenithAngleKey] floatValue];
+    
+    
     double calcUVIndex = [self uvIndexForOzone:ozoneData.columnOzone
                                       ZenithAngle:@(zenithAngle)
                                       andDistance:@(earthSunDistance)];
     
-    if (abs(calcUVIndex - ozoneData.uvIndex.floatValue) > 0.3) {
-        NSLog(@"Error: UV Index values differ. calculate %0.1f vs TEMIS %@", calcUVIndex, ozoneData.uvIndex);
-    }
     
     // vitamin D irradiance (W / m^2 )
     double vitDIrradiance = ([self vitDToUVIRatioFor:@(zenithAngle) andOzone:ozoneData.columnOzone] * calcUVIndex / 40.0);
@@ -155,6 +166,7 @@
 
 #pragma mark   =====================  adaptor functions =====================
 // This should move into a string formatting library.
+// TODO: There's a better way to do this with calendar units. 
 -(NSString *) stringForSeconds:(double)seconds {
      NSString *result = @"";
      int hrs=0;

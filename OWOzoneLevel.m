@@ -6,9 +6,17 @@
 //  Copyright (c) 2014 Suzanne Kiihne. All rights reserved.
 //
 
+@import CoreLocation;
 #import "OWOzoneLevel.h"
+#import "OWSolarWrapper.h"
 
 @implementation OWOzoneLevel
+
+NSString *const kLocationKey   =   @"kLocationKey";
+NSString *const kOzoneDateKey   =   @"kOzoneDateKey";
+NSString *const kColumnOzoneKey =   @"kColumnOzoneKey";
+NSString *const kUVIndexKey     =   @"kUVIndexKey";
+
 
 @synthesize ozoneDate;
 @synthesize columnOzone;
@@ -35,27 +43,31 @@
     // The date string from TEMIS contains English month names, based on a Georgian calendar
     // however, the time is solar noon for the location.
     // details at http://www.temis.nl/uvradiation/nrt/uvresol.html
-    // TODO:  set time to solar noon for requested lat/lon
+    // I'm setting the ozone date to solar noon for the location.
     [temisDateFormatter setLocale:enUSPOSIXLocale];
     [temisDateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     [temisDateFormatter setDateFormat:@"d MMM yyyy"];
-
-    //TODO: improve this by using constant strings for dictionary keys!
-    for (NSString *key in dict) {
-        if ([key rangeOfString:@"date" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-            // found the date
-            self.ozoneDate = [temisDateFormatter dateFromString:[dict objectForKey:key]];
-        } else if ([key rangeOfString:@"ozone" options:NSCaseInsensitiveSearch].location != NSNotFound){
-            // found the ozone level
-            self.columnOzone = @([[dict objectForKey:key] stringByReplacingOccurrencesOfString:@"DU" withString:@""].floatValue);
-        } else if ([key rangeOfString:@"uv" options:NSCaseInsensitiveSearch].location != NSNotFound) {
-            // must be uvIndex
-            self.uvIndex = @([[dict objectForKey:key] floatValue]);
-        } else {
-             // TODO: proper error handling
-            NSLog(@"Error: ozone dictionary key not recognized: %@", key);
-        }
+    
+    NSDate *nominalDate = [temisDateFormatter dateFromString:[dict objectForKey:kOzoneDateKey]];
+    CLLocation *location = [dict objectForKey:kLocationKey];
+    OWSolarWrapper *calculator = [[OWSolarWrapper alloc] init];
+    NSDictionary *sunTimes = [calculator sunTimesFor:nominalDate
+                                          atLatitude:@(location.coordinate.latitude)
+                                        andLongitude:@(location.coordinate.longitude)];
+    self.ozoneDate = [sunTimes objectForKey:kSolarNoonKey];
+    
+    NSString *ozoneString = [dict objectForKey:kColumnOzoneKey];
+    if ([ozoneString rangeOfString:@"DU"].location == NSNotFound) {
+        NSLog(@"Error: Is this really the column ozone? %@",ozoneString);
     }
+    self.columnOzone = @([ozoneString stringByReplacingOccurrencesOfString:@"DU" withString:@""].floatValue);
+   
+    self.uvIndex = @([[dict objectForKey:kUVIndexKey] floatValue]);
+    
+    if (self.uvIndex.floatValue > 20) {
+        NSLog(@"Error: Is this really the UVIndex? %@", self.uvIndex);
+    }
+    
     return self;
 }
 

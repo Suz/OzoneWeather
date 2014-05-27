@@ -31,7 +31,7 @@
 static NSString *const kJulianDateKey   =   @"kJulianDateKey";
 static NSString *const kSolarRightAscensionKey  =   @"kSolarRightAscensionKey";
 static NSString *const kSolarDeclinationKey     =   @"kSolarDeclinationKey";
-static NSString *const kSolarNoonKey    =   @"kSolarNoonKey";
+NSString *const kSolarNoonKey    =   @"kSolarNoonKey";
 NSString *const kSunriseKey      =   @"kSunriseKey";
 NSString *const kSunsetKey       =   @"kSunsetKey";
 static NSString *const kDateKey         =   @"date";
@@ -216,6 +216,28 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
 }
 
 #pragma mark =========================   Sunrise, Noon, Sunset Calculations ========================
+-(NSDate *)dayFractionToDate:(double)dayFrac onDate:(NSDate *)date
+{
+    int hour = floor(dayFrac*24);
+    int minute = floor( ((dayFrac*24) - hour )*60);
+    int second = rint( ((((dayFrac*24) - hour )*60) -minute) *60);
+    
+    NSDateComponents *comps = [[NSDateComponents alloc] init];
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    
+	[gregorian setTimeZone:[NSTimeZone systemTimeZone]];
+	
+    NSUInteger unitFlags = NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit;
+    
+    // needs to be reset to get date from view controller.
+    comps = [gregorian components:unitFlags fromDate:date];
+    [comps setHour:hour];
+    [comps setMinute:minute];
+    [comps setSecond:second];
+    
+	return ([gregorian dateFromComponents:comps]);
+}
+
 
 -(NSNumber *)equationOfTimeFor:(NSDate *)date {
     // approximate solution based on AA: http://aa.quae.nl/en/index.html
@@ -298,13 +320,14 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     
     double equationOfTime = [[self equationOfTimeFor:date] floatValue];
 
+    // dates as day-fractions
     double noonTime = (720 - 4*longitude.floatValue - equationOfTime + offset*60) / 1440;
     double riseTime = noonTime - haRise*4/1440;
     double setTime = noonTime + haRise*4/1440;
     
-    return @{ kSolarNoonKey     :   @(noonTime),
-              kSunriseKey       :   @(riseTime),
-              kSunsetKey        :   @(setTime)
+    return @{ kSolarNoonKey     :  [self dayFractionToDate:noonTime onDate:date],
+              kSunriseKey       :  [self dayFractionToDate:riseTime onDate:date],
+              kSunsetKey        :  [self dayFractionToDate:setTime onDate:date]
             };
 }
 

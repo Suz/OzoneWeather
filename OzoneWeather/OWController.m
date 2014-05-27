@@ -8,7 +8,7 @@
 
 #import "OWController.h"
 #import "OWManager.h"
-#import "OWViewManager.h"
+
 #import "OWViewData.h"
 
 @interface OWController ()
@@ -130,33 +130,35 @@
     
     [self.view addSubview:self.tableView];
     
-    [[RACObserve([OWViewManager sharedManager], currentData)
+    [[RACObserve([OWManager sharedManager], currentWeather)
       deliverOn:RACScheduler.mainThreadScheduler]
-     subscribeNext:^(OWViewData *newCurrentData){
-         temperatureLabel.text = [NSString stringWithFormat:@"%.0f°",newCurrentData.temperature.floatValue];
-         conditionsLabel.text = [newCurrentData.conditionDescription capitalizedString];
-         cityLabel.text = [newCurrentData.locationName capitalizedString];
+     subscribeNext:^(OWViewData *currentWeather){
+         temperatureLabel.text = [NSString stringWithFormat:@"%.0f°",currentWeather.temperature.floatValue];
+         conditionsLabel.text = [currentWeather.conditionDescription capitalizedString];
+         cityLabel.text = [currentWeather.locationName capitalizedString];
          
-         iconView.image = [UIImage imageNamed:[newCurrentData weatherImageName]];
+         iconView.image = [UIImage imageNamed:[currentWeather weatherImageName]];
      }];
     
     RAC(hiLoLabel, text) = [[RACSignal combineLatest:@[
-                                    RACObserve([OWViewManager sharedManager], currentData.hiTemp),
-                                    RACObserve([OWViewManager sharedManager], currentData.loTemp)]
+                                    RACObserve([OWManager sharedManager], currentWeather.hiTemp),
+                                    RACObserve([OWManager sharedManager], currentWeather.loTemp)]
                                     reduce:^(NSNumber *hi, NSNumber *low){
                                             return [NSString stringWithFormat:@"%.0f° / %.0f°", hi.floatValue, low.floatValue];
                                     }]
                             deliverOn:RACScheduler.mainThreadScheduler];
     
-    [[RACObserve([OWViewManager sharedManager], hourlyData)
+    [[RACObserve([OWManager sharedManager], hourlyForecast)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
+        // NSLog(@"new hourly forecast: %@", newForecast);
          [self.tableView reloadData];
      }];
     
-    [[RACObserve([OWViewManager sharedManager], dailyData)
+    [[RACObserve([OWManager sharedManager], dailyForecast)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
+         //NSLog(@"new daily forecast: %@", newForecast);
          [self.tableView reloadData];
      }];
     
@@ -180,10 +182,10 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0){
-        return MIN([[OWViewManager sharedManager].hourlyData count], 6) + 1;
+        return MIN([[OWManager sharedManager].hourlyForecast count], 6) + 1;
     }
     
-    return MIN([[OWViewManager sharedManager].dailyData count], 6) + 1;
+    return MIN([[OWManager sharedManager].dailyForecast count], 6) + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -203,14 +205,14 @@
         if (indexPath.row == 0) {
             [self configureHeaderCell:cell title:@"Hourly Forecast"];
         } else {
-            OWViewData *weather = [OWViewManager sharedManager].hourlyData[indexPath.row - 1];
+            OWViewData *weather = [OWManager sharedManager].hourlyForecast[indexPath.row - 1];
             [self configureHourlyCell:cell withWeather: weather];
         }
     } else if (indexPath.section == 1) {
         if (indexPath.row == 0) {
             [self configureHeaderCell:cell title:@"Daily Forecast"];
         } else {
-            OWViewData *weather = [OWViewManager sharedManager].dailyData[indexPath.row - 1];
+            OWViewData *weather = [OWManager sharedManager].dailyForecast[indexPath.row - 1];
             [self configureDailyCell:cell withWeather: weather];
         }
     }

@@ -11,8 +11,13 @@
 
 @interface OWOzoneLevel : MTLModel <MTLJSONSerializing>
 
-@property (nonatomic, strong) NSDate *ozoneDate;
-@property (nonatomic, strong) NSNumber *uvIndex;
+extern NSString *const kLocationKey;
+extern NSString *const kOzoneDateKey;
+extern NSString *const kColumnOzoneKey;
+extern NSString *const kUVIndexKey;
+
+@property (nonatomic, strong) NSDate *ozoneDate;  // solar noon at location
+@property (nonatomic, strong) NSNumber *uvIndex;  // max UVIndex for data (solar noon, clear sky)
 @property (nonatomic, strong) NSNumber *columnOzone;
 
 - (OWOzoneLevel *)initWithDictionary:(NSDictionary *)dict error:(NSError **)error;

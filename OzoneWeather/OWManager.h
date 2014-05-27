@@ -11,22 +11,22 @@
 #import <ReactiveCocoa/ReactiveCocoa/ReactiveCocoa.h>
 
 #import "OWCondition.h"
+#import "OWViewData.h"
 
 @interface OWManager : NSObject  <CLLocationManagerDelegate>
 
 + (instancetype)sharedManager;
 
 @property (nonatomic, strong, readonly) CLLocation *currentLocation;
-@property (nonatomic, strong, readonly) OWCondition *currentCondition;
+@property (nonatomic, strong, readonly) OWViewData *currentWeather;
 @property (nonatomic, strong, readonly) NSArray *hourlyForecast;
 @property (nonatomic, strong, readonly) NSArray *dailyForecast;
-@property (nonatomic, strong, readonly) NSArray *ozoneForecast;
 
-//- (RACSignal *)currentConditions;
-//- (RACSignal *)hourlyConditions;
-//- (RACSignal *)dailyConditions;
-//- (RACSignal *)ozoneConditions;
-
+/*
+- (RACSignal *)currentConditions;
+- (RACSignal *)hourlyForecast;
+- (RACSignal *)dailyForecast;
+*/
 -(void)findCurrentLocation;
 
 @end
