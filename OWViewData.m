@@ -11,8 +11,6 @@
 
 @interface OWViewData ()
 
-// private properties and methods for transforming data
-
 -(double) uvIndexForOzone:(NSNumber *)ozone ZenithAngle:(NSNumber *)zenith andDistance:(NSNumber *)distance;
 -(double) erythIrradianceForUVIndex:(NSNumber *)uvindex;
 -(double) vitDToUVIRatioFor:(NSNumber *)zenith andOzone:(NSNumber *)ozone;
@@ -27,8 +25,7 @@
     self = [self init];
     if (self == nil) return nil;
     
-    // is this necessary? should these be copies?
-    
+    // TODO: should these be copies?
     _date           = conditionsData.date;
     _temperature    = conditionsData.temperature;
     
@@ -38,6 +35,8 @@
     _conditionDescription = conditionsData.conditionDescription;
     _condition      = conditionsData.condition;
     _icon           = conditionsData.icon;
+    
+    _columnOzone    = ozoneData.columnOzone.stringValue;
     
     // Set up astronomy calculations:
     OWSolarWrapper *calculator = [[OWSolarWrapper alloc] init];
@@ -51,7 +50,7 @@
     _sunset = [sunTimes objectForKey:kSunsetKey];
     
     if (abs( [_sunrise timeIntervalSinceDate:conditionsData.sunrise] ) > 600) {
-        NSLog(@"Error: calculated sunrise at %@, but openweather sunrise at %@", _sunrise, conditionsData.sunrise);
+        NSLog(@"Error: For date %@ sunrise calculated at %@, but openweather has %@", conditionsData.date, _sunrise, conditionsData.sunrise);
     }
 
     // UVI: TEMIS reports max for today. Also want current value.
@@ -104,6 +103,7 @@
         vitDTime = [self secondsToVitDForIrradiance:filteredVitDIrradiance];
     }
     
+    _maxUVIndex = [NSString stringWithFormat:@"%.1f", filteredUVIndex];
     _uvIndex = [NSString stringWithFormat:@"%.1f", filteredUVIndex];
     _vitaminDTime = [self stringForSeconds:vitDTime];
    // _UVADanger;  --  I thought there was a paper by Fioletov on the UVA intensity relative to UVB or UVI over the course of a day, but I haven't been able to find it. Need to sign on to web of science, possibly from university library. 
@@ -143,9 +143,20 @@
 }
 
 - (UIColor *)uvDangerLevel {
+    return [self uvDangerLevelForUV:@(self.uvIndex.floatValue)];
+}
+
+- (UIColor *)maxUVDangerLevel {
+    return [self uvDangerLevelForUV:@(self.maxUVIndex.floatValue)];
+}
+
+- (UIColor *)uvDangerLevelForUV:(NSNumber *)uvindex {
     
-    CGFloat num = self.uvIndex.floatValue;
-    if (num < 2) {
+    CGFloat num = uvindex.floatValue;
+    if (num < 0.01) {
+        // sun not shining
+        return [UIColor colorWithWhite:0 alpha:0.4];
+    } else if (num < 2) {
         // very low. no chance of sunburn
         return [UIColor colorWithRed:0 green:1 blue:0 alpha:0.2];
     } else if (num < 4) {
@@ -313,7 +324,7 @@
   based on Terushkin et all,
  J Am Acad Dermatol. 2011 (halpern 2011)
  
- Checked Results vs paper. Values good for all skin types, places shown in paper for noon values. Compared October values in paper to Nov. 7 values (today). Values for Nov generally 1-2 min longer, so good agreement!
+ Checked Results vs paper. Values good for all skin types, places shown in paper for noon values. Compared October values in paper to Nov. 7 values. Values for Nov generally 1-2 min longer, so good agreement!
  
  Paper lists SDD values 87.6, 109.4, 131.3, 197.0, 262.8, 437.8 J/m2 for skin types I-VI, respectively.
  Fit values for types I-V (approx_reflectance) in Igor:

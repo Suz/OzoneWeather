@@ -23,15 +23,17 @@
 @property (nonatomic, copy, readonly) NSDate *sunset;
 @property (nonatomic, copy, readonly) NSString *conditionDescription;
 @property (nonatomic, copy, readonly) NSString *condition;
-
-@property (nonatomic, copy, readonly) NSString *uvIndex; // filtered by weather.
-@property (nonatomic, copy, readonly) NSString *vitaminDTime;
-//@property (nonatomic, copy, readonly) NSString *UVADanger;
 @property (nonatomic, strong) NSNumber *icon;
+
+@property (nonatomic, copy, readonly) NSString *columnOzone; // Dobson Units
+@property (nonatomic, copy, readonly) NSString *uvIndex;    // filtered by weather.
+@property (nonatomic, copy, readonly) NSString *maxUVIndex; // noon value, not filtered
+@property (nonatomic, copy, readonly) NSString *vitaminDTime;   // minutes
 
 -(id)initWithConditions:(OWCondition *)conditionsData andOzone:(OWOzoneLevel *)ozoneData;
 
 - (NSString *)weatherImageName;
 - (UIColor *)uvDangerLevel;
+- (UIColor *)maxUVDangerLevel;
 
 @end

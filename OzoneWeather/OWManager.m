@@ -202,9 +202,9 @@
         OWOzoneLevel *ozone = [ozoneLevels objectAtIndex:idx];
         
         double temp = [conditions.date timeIntervalSinceDate:ozone.ozoneDate];
-        if (temp < time_diff) {
+        if (abs(temp) < time_diff) {
             // found a ozone level closer in time.
-            time_diff = temp;
+            time_diff = abs(temp);
             keeper = idx;
         }
     }

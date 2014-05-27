@@ -16,6 +16,7 @@
 @property (nonatomic,strong) UIImageView *backgroundImageView;
 @property (nonatomic,strong) UITableView *tableView;
 @property (nonatomic,assign) CGFloat screenHeight;
+
 @property (nonatomic,strong) NSDateFormatter *hourlyFormatter;
 @property (nonatomic,strong) NSDateFormatter *dailyFormatter;
 
@@ -63,7 +64,8 @@
     
     CGFloat temperatureHeight = 110;
     CGFloat hiLoHeight = 40;
-    CGFloat iconSize = 30;
+   // CGFloat iconSize = 30;
+    CGFloat iconFrameSize = 40;
     
     CGRect hiLoFrame = CGRectMake(inset,
                                       headerFrame.size.height - hiLoHeight,
@@ -76,13 +78,13 @@
                                          temperatureHeight);
 
     CGRect iconFrame = CGRectMake(inset,
-                                  headerFrame.size.height - hiLoHeight - temperatureHeight -iconSize,
-                                  iconSize,
-                                  iconSize);
+                                  headerFrame.size.height - hiLoHeight - temperatureHeight -iconFrameSize,
+                                  iconFrameSize,
+                                  iconFrameSize);
     
     CGRect conditionsFrame = iconFrame;
-    conditionsFrame.size.width = headerFrame.size.width - (2 * inset) - iconSize + 10;
-    conditionsFrame.origin.x = iconFrame.origin.x + iconSize + 10;
+    conditionsFrame.size.width = headerFrame.size.width - (2 * inset) - iconFrameSize + 10;
+    conditionsFrame.origin.x = iconFrame.origin.x + iconFrameSize + 10;
     
     UIView *header = [[UIView alloc] initWithFrame:headerFrame];
     header.backgroundColor = [UIColor clearColor];
@@ -124,12 +126,17 @@
     
     //bottom left
     UIImageView *iconView = [[UIImageView alloc] initWithFrame:iconFrame];
-    iconView.contentMode = UIViewContentModeScaleAspectFit;
+    iconView.contentMode = UIViewContentModeCenter;
     iconView.backgroundColor = [UIColor clearColor];
+    iconView.layer.cornerRadius = 5.0;
+    iconView.layer.masksToBounds = YES;
     [header addSubview:iconView];
     
     [self.view addSubview:self.tableView];
     
+    
+    // Respond to data updates:
+    //          -- current weather
     [[RACObserve([OWManager sharedManager], currentWeather)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(OWViewData *currentWeather){
@@ -137,17 +144,22 @@
          conditionsLabel.text = [currentWeather.conditionDescription capitalizedString];
          cityLabel.text = [currentWeather.locationName capitalizedString];
          
+         hiLoLabel.text = [currentWeather.vitaminDTime capitalizedString];
          iconView.image = [UIImage imageNamed:[currentWeather weatherImageName]];
+         iconView.backgroundColor = [currentWeather uvDangerLevel];
      }];
     
-    RAC(hiLoLabel, text) = [[RACSignal combineLatest:@[
+  /*  RAC(hiLoLabel, text) = [[RACSignal combineLatest:@[
                                     RACObserve([OWManager sharedManager], currentWeather.hiTemp),
                                     RACObserve([OWManager sharedManager], currentWeather.loTemp)]
                                     reduce:^(NSNumber *hi, NSNumber *low){
                                             return [NSString stringWithFormat:@"%.0f° / %.0f°", hi.floatValue, low.floatValue];
                                     }]
                             deliverOn:RACScheduler.mainThreadScheduler];
+   */
     
+    
+    //          -- hourly forecasts
     [[RACObserve([OWManager sharedManager], hourlyForecast)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
@@ -155,6 +167,7 @@
          [self.tableView reloadData];
      }];
     
+    //          -- daily forecasts
     [[RACObserve([OWManager sharedManager], dailyForecast)
       deliverOn:RACScheduler.mainThreadScheduler]
      subscribeNext:^(NSArray *newForecast){
@@ -162,6 +175,7 @@
          [self.tableView reloadData];
      }];
     
+    // Start up the data gathering process:
     [[OWManager sharedManager] findCurrentLocation];
    
 }
@@ -231,18 +245,26 @@
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
     cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
+    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
+    cell.detailTextLabel.text = weather.maxUVIndex;
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
-    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    cell.imageView.contentMode = UIViewContentModeCenter;
+    cell.imageView.backgroundColor = [weather uvDangerLevel];
+    cell.imageView.layer.cornerRadius = 5.0;
+    cell.imageView.layer.masksToBounds = YES;
 }
 
 -(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
     cell.textLabel.text = [self.dailyFormatter stringFromDate:weather.date];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.hiTemp.floatValue, weather.loTemp.floatValue];
+    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.hiTemp.floatValue, weather.loTemp.floatValue];
+    cell.detailTextLabel.text = weather.maxUVIndex;
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
-    cell.imageView.contentMode = UIViewContentModeScaleAspectFit;
+    cell.imageView.contentMode = UIViewContentModeCenter;
+    cell.imageView.backgroundColor = [weather maxUVDangerLevel];
+    cell.imageView.layer.cornerRadius = 5.0;
+    cell.imageView.layer.masksToBounds = YES;
 }
 
 # pragma mark -- UITableViewDelegate
