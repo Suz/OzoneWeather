@@ -120,7 +120,7 @@
     hiLoLabel.backgroundColor = [UIColor clearColor];
     hiLoLabel.textColor = [UIColor whiteColor];
     hiLoLabel.text = @"0° / 0°";
-    hiLoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:28];
+    hiLoLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:24];
     [header addSubview:hiLoLabel];
     
     
@@ -144,7 +144,7 @@
          conditionsLabel.text = [currentWeather.conditionDescription capitalizedString];
          cityLabel.text = [currentWeather.locationName capitalizedString];
          
-         hiLoLabel.text = [currentWeather.vitaminDTime capitalizedString];
+         hiLoLabel.text = currentWeather.vitaminDTime;
          iconView.image = [UIImage imageNamed:[currentWeather weatherImageName]];
          iconView.backgroundColor = [currentWeather uvDangerLevel];
      }];
@@ -241,30 +241,30 @@
     cell.imageView.image = nil;
 }
 
--(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
+-(void)configureTableCell:(UITableViewCell *)cell{
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
     cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
-    cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
-    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
-    cell.detailTextLabel.text = weather.maxUVIndex;
-    cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.contentMode = UIViewContentModeCenter;
-    cell.imageView.backgroundColor = [weather uvDangerLevel];
     cell.imageView.layer.cornerRadius = 5.0;
     cell.imageView.layer.masksToBounds = YES;
 }
 
+-(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
+    [self configureTableCell:cell];
+    cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
+    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
+    cell.detailTextLabel.text = weather.vitaminDTime;
+    cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
+    cell.imageView.backgroundColor = [weather uvDangerLevel];
+}
+
 -(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
-    cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
+    [self configureTableCell:cell];
     cell.textLabel.text = [self.dailyFormatter stringFromDate:weather.date];
     //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.hiTemp.floatValue, weather.loTemp.floatValue];
     cell.detailTextLabel.text = weather.maxUVIndex;
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
-    cell.imageView.contentMode = UIViewContentModeCenter;
     cell.imageView.backgroundColor = [weather maxUVDangerLevel];
-    cell.imageView.layer.cornerRadius = 5.0;
-    cell.imageView.layer.masksToBounds = YES;
 }
 
 # pragma mark -- UITableViewDelegate

@@ -49,7 +49,7 @@
     _sunrise = [sunTimes objectForKey:kSunriseKey];
     _sunset = [sunTimes objectForKey:kSunsetKey];
     
-    if (abs( [_sunrise timeIntervalSinceDate:conditionsData.sunrise] ) > 600) {
+    if ((abs( [_sunrise timeIntervalSinceDate:conditionsData.sunrise] ) > 600) || !_sunrise) {
         NSLog(@"Error: For date %@ sunrise calculated at %@, but openweather has %@", conditionsData.date, _sunrise, conditionsData.sunrise);
     }
 
@@ -66,6 +66,7 @@
                                    ZenithAngle:@(noonZenithAngle)
                                    andDistance:@(earthSunDistance)];
 
+    //NSLog(@"on date %@, noonZenithAngle: %.4f, max UVIndex: %.1f",ozoneData.ozoneDate, noonZenithAngle, maxUVIndex);
     if (abs(maxUVIndex - ozoneData.uvIndex.floatValue) > 0.3) {
         NSLog(@"Error: UV Index values differ. calculate %0.1f vs TEMIS %@", maxUVIndex, ozoneData.uvIndex);
     }
@@ -96,16 +97,24 @@
     
     // vitamin D time
     double vitDTime;
-    if (filteredVitDIrradiance < 10) {
+    if (filteredVitDIrradiance < 0.05) {
         vitDTime = -99;   // not enough UV to make vitamin D!
     } else {
         // TODO: include calculations for changing angle of the sun
         vitDTime = [self secondsToVitDForIrradiance:filteredVitDIrradiance];
     }
     
-    _maxUVIndex = [NSString stringWithFormat:@"%.1f", filteredUVIndex];
-    _uvIndex = [NSString stringWithFormat:@"%.1f", filteredUVIndex];
-    _vitaminDTime = [self stringForSeconds:vitDTime];
+    _maxUVIndex = [NSString stringWithFormat:@"%.1f", maxUVIndex];
+    _uvIndex = @" – ";
+    if (filteredUVIndex > 0.1){
+        _uvIndex = [NSString stringWithFormat:@"%.1f", filteredUVIndex];
+    }
+    
+    _vitaminDTime = @"no vitamin D";
+    if (filteredUVIndex > 2.0) {
+        _vitaminDTime = [NSString stringWithFormat:@"Vitamin D in %@ min.", [self stringForSeconds:vitDTime]];
+    }
+    
    // _UVADanger;  --  I thought there was a paper by Fioletov on the UVA intensity relative to UVB or UVI over the course of a day, but I haven't been able to find it. Need to sign on to web of science, possibly from university library. 
     
     return self;
@@ -221,13 +230,13 @@
          if (!min) {
              min = 0;
          }
-         result = [NSString stringWithFormat:@"%i:%02i ", hrs,min];
+         result = [NSString stringWithFormat:@"%i:%02i", hrs,min];
          //result = [NSString stringWithFormat:@"%i:%02i:%02i ", hrs,min,sec];
      } else if (min) {
-         result = [NSString stringWithFormat:@"%i ",min];
+         result = [NSString stringWithFormat:@"%i",min];
          //result = [NSString stringWithFormat:@"%i:%02i ",min];
      } else {
-         result = @"< 1 ";
+         result = @"< 1";
          //result = [NSString stringWithFormat:@":%02i ", sec];
      }
      
@@ -351,6 +360,7 @@
 	
 	double interval = target / irradiance;  // seconds needed to reach target exposure
     
+    //NSLog(@"seconds to vitamin D: %.1f", interval);
     return interval;
 }
 
