@@ -11,6 +11,8 @@
 
 @interface OWSolarWrapper : NSObject
 
+extern NSString *const kSolarRightAscensionKey;
+extern NSString *const kSolarDeclinationKey;
 extern NSString *const kZenithAngleKey;
 extern NSString *const kAzimuthAngleKey;
 extern NSString *const kSunriseKey;

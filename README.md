@@ -100,7 +100,7 @@ Regarding `then:`
 
 vs `subscribeNext:`
 
-
+In the end, I used `subscribeNext` because I got that to work. Elegance is yet to be learned. I'm fomenting a question for SO on when to move in / out of the functional paradigm. I can envision this app as almost entirely functional, but I am currently unable to get `RAC` to handle the signals quite the way I want. More learning to do. 
 
 ###TODO
 - I think there's a memory leak somewhere. It's fairly small, but these things add up. I need to get up to speed with instruments and identifying leaks again. Things have changed quite a bit since XCode 4. 
@@ -114,4 +114,21 @@ vs `subscribeNext:`
      To do this, I need to work more at combining the weather signals, possibly changing the model significantly. Thank goodness for git branches!
 - (I'd also like to build a mathematical model of the flow of vitaminD, and timing of different kinds of damage and repair in the skin), but that's a pretty significant academic project. or maybe it isn't. Should be a series of competing rate equations, some quite long (vitamin D storage)
    
+### Unit Testing
+One of the big holes in all this is that there are zero tests. That just isn't OK. The first step is to set up logic tests for my astronomy code. That should be straight forward. I set up XCTest following the directions from WWDC lcture, and created some tests. The first difficutly was that my test class wouldn't let me call any private methods in the class I'm testing. I don't want to move those function definitions into the public interface, and luckily there is another way:  create a category in your test class ([stackoverlfow](http://stackoverflow.com/a/1099281/962009) to the rescue again!). 
+
+    // category used to test private methods
+    @interface OWSolarWrapper (Test)
+    
+    // private functions from OWSolarWrapper.m
+    // date functions
+    -(NSNumber *) julianDateFor:(NSDate *)date;
+    -(NSNumber *) julianCenturyForJulianDate:(NSNumber *)julianDate;
+    -(NSNumber *) julianDateRelative2003For:(NSDate *)date;
+    
+    // basic astronomy calcs
+    -(NSNumber *) equationOfTimeFor:(NSDate *)date;
+    -(NSDictionary *) solarParametersForDate:(NSDate *)date;
+    
+    @end
 

@@ -64,6 +64,7 @@
 		F4B6DB0619215A830086D5B6 /* weather-snow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4B6DAEE19215A830086D5B6 /* weather-snow@2x.png */; };
 		F4B6DB0719215A830086D5B6 /* weather-tstorm.png in Resources */ = {isa = PBXBuildFile; fileRef = F4B6DAEF19215A830086D5B6 /* weather-tstorm.png */; };
 		F4B6DB0819215A830086D5B6 /* weather-tstorm@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F4B6DAF019215A830086D5B6 /* weather-tstorm@2x.png */; };
+		F4D9BA1A19356E4F005B7C53 /* OWAstronomerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = F4D9BA1919356E4F005B7C53 /* OWAstronomerTest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -152,6 +153,7 @@
 		F4B6DAEE19215A830086D5B6 /* weather-snow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "weather-snow@2x.png"; sourceTree = "<group>"; };
 		F4B6DAEF19215A830086D5B6 /* weather-tstorm.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "weather-tstorm.png"; sourceTree = "<group>"; };
 		F4B6DAF019215A830086D5B6 /* weather-tstorm@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "weather-tstorm@2x.png"; sourceTree = "<group>"; };
+		F4D9BA1919356E4F005B7C53 /* OWAstronomerTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWAstronomerTest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -248,6 +250,7 @@
 		F43AA610191C425400BCF1E5 /* OzoneWeatherTests */ = {
 			isa = PBXGroup;
 			children = (
+				F4D9BA1919356E4F005B7C53 /* OWAstronomerTest.m */,
 				F43AA616191C425400BCF1E5 /* OzoneWeatherTests.m */,
 				F43AA611191C425400BCF1E5 /* Supporting Files */,
 			);
@@ -536,6 +539,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F43AA617191C425400BCF1E5 /* OzoneWeatherTests.m in Sources */,
+				F4D9BA1A19356E4F005B7C53 /* OWAstronomerTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

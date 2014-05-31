@@ -9,7 +9,7 @@
 
 #include <math.h>
 #include "GrenaLib.h"
-#define PI	3.1415926535897932384626433832795028841971 
+#define PI	3.1415926535897932384626   //433832795028841971 
 
 // Heliocentric calculations
 double calcHelioLongGrena(double grenaJDE)  //
@@ -32,7 +32,7 @@ double calcHelioLongGrena(double grenaJDE)  //
 	double Lp = t2*t2*(( (-2.30796e-07*t2 + 3.7976e-06)*t2 -2.0458e-05)*t2 +3.976e-05);
 	
 	double HelioLong = Ly+Lm+Lh+Lp;  //return (Ly + Lm + Lh + Lp); //
-	return (fmod(HelioLong, 2*M_PI));  // = HeliocentricLongitude in range 0-2pi
+	return (fmod(HelioLong, 2*PI));  // = HeliocentricLongitude in range 0-2pi
 }
 
 // Geocentric calculations:
@@ -45,7 +45,7 @@ void calcGeocentricGrena(double grenaJDE, double helioLong, datapair *RA_Dec)
 	double axisTilt = -6.21e-9*grenaJDE + 0.409086 + 4.46e-5*sin(9.252e-4*grenaJDE + 0.397);
 
 	// 3.5 Geocentric Longitude, gamma
-	double geocentricLong = helioLong + M_PI + nutationCorrection - 9.932e-5;  //
+	double geocentricLong = helioLong + PI + nutationCorrection - 9.932e-5;  //
 
 	// right ascension (alpha)
 	double geocentricRA = atan2(sin(geocentricLong)*cos(axisTilt), cos(geocentricLong));
@@ -62,7 +62,7 @@ void calcGeocentricGrena(double grenaJDE, double helioLong, datapair *RA_Dec)
 void calcTopocentricGrena(double grenaJDE, datapair *geocRA_Dec, datapair *observerLatLong, datapair *obsPT, datapair *zenAzi)
 {
 	double nutationCorrection = 8.33e-5*sin(9.252e-4*grenaJDE - 1.173);
-	double t_G = grenaJDE - (65.984 / 86400.0);
+	double t_G = grenaJDE;
 	
 	double obsLat = (PI/180) * (observerLatLong->a);
 	double obsLong = (PI/180) * (observerLatLong->b);
@@ -75,12 +75,13 @@ void calcTopocentricGrena(double grenaJDE, datapair *geocRA_Dec, datapair *obser
 	// 3.6 Hour angle of the sun
     // to restrict to 0-2pi, use HourAngle = fmod(hourAngle,2*PI);
 	double localHourAngle = 6.30038809903*t_G + 4.8824623 + 0.9174*nutationCorrection + obsLong - geocRightAscension;
-	
+	localHourAngle = fmod(localHourAngle, 2*PI);
+    
 	double s_HA = sin(localHourAngle);
 	double c_HA = cos(localHourAngle);
 	
 	//3.7 Parallax correction (delta_alpha)
-	double parallax = -4.26e-5*c_lat*s_HA;
+	double parallax = -4.26e-5*c_lat*s_HA;  //d_alpha
 
 	double topocentricDec = geocDeclination - 4.26e-5*(s_lat - geocDeclination*c_lat);
 	
@@ -97,8 +98,14 @@ void calcTopocentricGrena(double grenaJDE, datapair *geocRA_Dec, datapair *obser
 	double obsPressure = obsPT->a;
 	double obsTemp = obsPT->b;
 
+    
 	//3.10 correction for atmospheric refraction (pressure in ATM, temp in °C)
-	double refracCorr = 0.084217*obsPressure/( (273+obsTemp)*tan(elevationAngle+0.0031376/(elevationAngle + 0.089186)));
+	double refracCorr = 0;
+    
+    //!!!! no refraction correction;
+    if (elevationAngle > -0.01) {
+        refracCorr = 0.084217*obsPressure/( (273+obsTemp)*tan(elevationAngle+0.0031376/(elevationAngle + 0.089186)));
+    }
 
 	//3.11 zenith angle
 	// add PI to azimuth to convert from 0 at S to 0 at N. Counting clockwise.
