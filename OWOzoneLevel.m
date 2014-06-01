@@ -31,7 +31,6 @@ NSString *const kUVIndexKey     =   @"kUVIndexKey";
 
 // replaces initWithDictionary: error: method in MTLModel.m
 // There are no methods for using NSTransformers with a dictionary in MTLModel.
-// Wouldn't that be a nice addition to the framework?!
 -(instancetype)initWithDictionary:(NSDictionary *)dict error:(NSError **)error {
     self = [self init];
     if (self == nil) return nil;

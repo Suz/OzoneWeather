@@ -127,7 +127,6 @@
     // factory method:  creates signal for other objects to use
     return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
         // will fetch data to parse later
-        // TODO:  change this for html!!!
         NSURLSessionDataTask *dataTask = [self.session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             // Handle session here
             if (! error) {
@@ -194,16 +193,13 @@
                 return value.length > 2;
             }] array];
             // at this point, I've got an array of 3 strings containing one row of the table:
-            // a date, a UV index value, and an ozone level. I'd like to use these to create ozone level objects
-            // to pack into my final array
+            // a date, a UV index value, and an ozone level.
         }] filter:^BOOL(NSArray *rowArray) {
             return rowArray.count > 0;
         }] map:^(NSArray *rowArray) {
             NSArray *temp = [rowArray arrayByAddingObject:location];
-            //NSLog(@"%@", temp);
             return [NSDictionary dictionaryWithObjects:temp forKeys:@[kOzoneDateKey, kUVIndexKey, kColumnOzoneKey, kLocationKey]];
         }] map:^(NSDictionary *rowDict) {
-            //NSLog(@"dictionary looks like: %@", rowDict);
             NSError *ozoneError = nil;
             return [[OWOzoneLevel alloc] initWithDictionary:rowDict error:&ozoneError];
         }] array];

@@ -64,7 +64,6 @@
     
     CGFloat temperatureHeight = 110;
     CGFloat hiLoHeight = 40;
-   // CGFloat iconSize = 30;
     CGFloat iconFrameSize = 40;
     
     CGRect hiLoFrame = CGRectMake(inset,
@@ -252,7 +251,6 @@
 -(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     [self configureTableCell:cell];
     cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
-    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f°", weather.temperature.floatValue];
     cell.detailTextLabel.text = weather.vitaminDTime;
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.backgroundColor = [weather uvDangerLevel];
@@ -261,7 +259,6 @@
 -(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     [self configureTableCell:cell];
     cell.textLabel.text = [self.dailyFormatter stringFromDate:weather.date];
-    //cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° / %.0f°", weather.hiTemp.floatValue, weather.loTemp.floatValue];
     cell.detailTextLabel.text = weather.maxUVIndex;
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.backgroundColor = [weather maxUVDangerLevel];
@@ -276,7 +273,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end

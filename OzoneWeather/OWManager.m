@@ -12,8 +12,6 @@
 
 @interface OWManager ()
 
-//@property (nonatomic, strong, readwrite) CLLocation *currentLocation;
-
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, assign) BOOL isFirstUpdate;
 @property (nonatomic, strong) OWClient *client;
@@ -70,6 +68,8 @@
     return self;
 }
 
+#pragma mark ============= Location ====================
+
 -(void)findCurrentLocation {
     self.isFirstUpdate = YES;
     [self.locationManager startUpdatingLocation];
@@ -92,52 +92,8 @@
     
 }
 
-// Starts a single request, no matter how many subscriptions `connection.signal`
-// gets. This is equivalent to the -replay operator, or similar to
-// +startEagerlyWithScheduler:block:.
+#pragma mark ============= Location ====================
 
-/*  Could try re-writing to publish results, particularly for ozone, but not clear how to do this (at least to me...)
--(RACSignal *)updateWeather {
-    // should keep multiple named signals here, then combine them before returning the final signal. See structure of
-    // anwer: http://stackoverflow.com/questions/20375835/how-to-combine-two-async-network-calls-with-reactivecocoa on SO.
-    
-    RACSignal *ozoneForecastSignal = [self.client fetchOzoneForecastForLocation:self.currentLocation.coordinate];
-    RACSignal *currentConditionsSignal = [self.client fetchCurrentConditionsForLocation:self.currentLocation.coordinate];
-    RACSignal *hourlyForecastSignal = [self.client fetchHourlyForecastForLocation:self.currentLocation.coordinate];
-    RACSignal *dailyForecastSignal = [self.client fetchDailyForecastForLocation:self.currentLocation.coordinate];
-    
-    // need to combine the above signals and return an array or arrays or signals of view data objects. To make a viewdata object, I need to combine an OWCondition object, an OWOzoneLevel object, and astronomical data. need to validate on dates.
-    
-    
-    return [RACSignal merge:@[
-                              [self.client fetchCurrentConditionsForLocation:self.currentLocation.coordinate],
-                              [self.client fetchHourlyForecastForLocation:self.currentLocation.coordinate],
-                              [self.client fetchDailyForecastForLocation:self.currentLocation.coordinate],
-                              [self.client fetchOzoneForecastForLocation:self.currentLocation.coordinate]
-                              ]];
-}
-*/
-
-/*
--(RACSignal *)updateCurrentConditions {
-    return [[self.client fetchCurrentConditionsForLocation:self.currentLocation.coordinate] doNext:^(OWCondition *condition) {
-        NSLog(@"Received conditions: %@", condition);
-        self.currentCondition = condition;
-    }];
-}
-
--(RACSignal *)updateHourlyForecast {
-    return [[self.client fetchHourlyForecastForLocation:self.currentLocation.coordinate] doNext:^(NSArray *conditions) {
-        self.hourlyForecast = conditions;
-    }];
-}
-
--(RACSignal *)updateDailyForecast {
-    return [[self.client fetchDailyForecastForLocation:self.currentLocation.coordinate] doNext:^(NSArray *conditions) {
-        self.dailyForecast = conditions;
-    }];
-}
-*/
 -(RACSignal *)updateOzoneForLocation:(CLLocation *)location {
     // note: replayLazily effectively publishes to an RACSubject, allowing the signal to be shared
     return [[self.client fetchOzoneForecastForLocation:location] replayLazily];
@@ -148,6 +104,7 @@
             map:^(OWCondition *condition){
                 return [self updateDataWith:condition andOzone:ozone];
             }]
+            // TODO: change architecture so this isn't a side effect.
             doNext:^(OWViewData *data) {
                 self.currentWeather = data;
             }];
@@ -175,13 +132,15 @@
     return [[[self.client fetchDailyForecastForLocation:location.coordinate]
             map:^(NSArray *forecast){
                 RACSequence *daily = forecast.rac_sequence;
-                return [[daily map:^(OWCondition *condition) {
+                return [[[daily filter:^BOOL(OWCondition *condition) {
+                            return condition.description.length > 2;
+                }] map:^(OWCondition *condition) {
                             if (!condition.latitude) { // TODO: fix this with another OWConditions subclass. try here first.
                                 condition.latitude = @(location.coordinate.latitude);
                                 condition.longitude = @(location.coordinate.longitude);
                             }
                             return [self updateDataWith:condition andOzone:ozone];
-                        }] array];
+                }]   array];
 
             }]
             doNext:^(NSArray *dailyData) {
@@ -194,7 +153,6 @@
 
 -(OWViewData *)updateDataWith:(OWCondition *)conditions andOzone:(NSArray *)ozoneLevels {
     // Find ozoneLevel with date closest to conditions:
-
     double time_diff = 48*3600.0; // initialize at 2 days
     int keeper = -99;
     
@@ -213,7 +171,7 @@
         return Nil;
     };
     
-    OWViewData *viewData = [[OWViewData alloc] initWithConditions:conditions andOzone:ozoneLevels[keeper]];   //
+    OWViewData *viewData = [[OWViewData alloc] initWithConditions:conditions andOzone:ozoneLevels[keeper]];  
     
     return viewData;
 }

@@ -12,8 +12,6 @@
 
 @interface OWViewData : NSObject 
 
-// will try to make this work, but I think there
-// is probably a simple architecture... maybe. 
 @property (nonatomic, copy, readonly) NSDate *date;
 @property (nonatomic, copy, readonly) NSNumber *temperature;
 @property (nonatomic, copy, readonly) NSNumber *hiTemp;

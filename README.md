@@ -1,8 +1,8 @@
 #OzoneWeather
 Intention:  
-project will incorporate style from iOS 7 best practices blog on Wenderlich (sample app: [SimpleWeather](http://www.raywenderlich.com/55384/ios-7-best-practices-part-1)). It will also add in Ozone data from the NL database, using libxml2 and Hpple based on another tutorial [how to parse HTML on iOS](http://www.raywenderlich.com/14172/how-to-parse-html-on-ios).  
+project will incorporate style from iOS 7 best practices blog on Wenderlich (sample app: [SimpleWeather](http://www.raywenderlich.com/55384/ios-7-best-practices-part-1)). It will also add in Ozone data from the TEMIS database, using `libxml2` and `Hpple` to parse the `.html` based on another tutorial [how to parse HTML on iOS](http://www.raywenderlich.com/14172/how-to-parse-html-on-ios).  
 
-The weather feed contains sunrise / sunset data, which will give an indication of the day length. I can combine that with latitude, time, and weather to give a decent estimate of UV conditions. 
+The weather feed contains sunrise / sunset data, which will give an indication of the day length. I can combine that with latitude, time, and weather to give a decent estimate of UV conditions. … or I can encorporate my astronomy code from my previous work and put it out there. 
 
 ##Technologies
 The iOS best practices post includes a number of interesting technologies. I'm going to ignore the front end blur filter they use, but I will keep these:
@@ -11,28 +11,28 @@ The iOS best practices post includes a number of interesting technologies. I'm g
     - `vi podfile`  cocoapods searches for a file named 'podfile'. Include the dependencies to be included with the project there (see example in the directory)
     - `pod install` obtains the dependencies, creates `pods/` to hold the dependencies and creates a `.xcworkspace` file to hold the new project *with* dependencies
     - `pod update` will update a dependency to the latest version. I acutally had to do this in this project because the TSMessage project had suffered from a problem at GitHub and they needed to put in a bug fix. It worked like a charm!
-- Mantle  -- a project from GitHub for creating data models:  aids conversions between JSON <--> NSObject (very handy with a json data feed, as we'll see!). I only wish there were more useful tools for directly converting a dictionary into an object. I didn't come up with a good solution, but at least it works, and it's pretty easy to see how it could be improved. 
+- [Mantle](https://github.com/Mantle/Mantle)  -- a project from GitHub for creating data models:  aids conversions between JSON <--> NSObject (very handy with a json data feed, as we'll see!). I only wish there were more useful tools for directly converting a dictionary into an object. I didn't come up with a good solution, but at least it works, and it's pretty easy to see how it could be improved. 
 - [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) -- allows you to use functional programming constructions in iOS apps. Ever run into a spaghetti of callbacks with KVO? Functional Reactive programming may not be the ultimate solution, but it certainly provides a different paradigm that applies to many common situations. Wow. If you haven't used it you, you gotta try this stuff.
 - [hpple](https://github.com/topfunky/hpple) I needed an HTML parser for iOS. There are a lot of choices, but this one had a decent tutorial at Ray Wenderlich.com, and seemed easy to use (and it was). The parsing problem is pretty small as I only want to do a single page that hasn't changed in years. [Regex would have worked](http://blog.codinghorror.com/parsing-html-the-cthulhu-way/), but I wanted to learn how to do it better. 
 - [TSMessages](https://github.com/toursprung/TSMessages) -- a ticker-style alert message system. 
-- [git](http://www.git-scm.com) for version control -- the technology driving collaborative development on github. Can't say I've mastered the learning curve yet. This is one of those situations where a video explanation really helps. Jessica Kerr (@jessitron) does a great one, [git happens -- with sticky notes](http://vimeo.com/46010208)! (this particular presentation is for coders coming from a background in subversion, but I've also seen Jessica do a great intro for novices who haven't heard of version control at all. The'll be under the name 'git happens' as well).
-     - As with any newly hatched project, there's the question of what to add to `.gitignore`. For a project using `cocoapods`, see the pros and cons at [guides.cocoapods.org](http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control).
-     - For this project, I want to keep it lightweight, but also keep track of the dependencies. To do this, I'll add the `pods/` directory to `.gitignore`, but keep the `podfile`, `podfile.lock` and other files under version control.
-     - used a [stackoverflow post](http://stackoverflow.com/questions/18939421/what-should-xcode-5-gitignore-file-include) to get an appropriate `.gitignore` file
+- [git](http://www.git-scm.com) for version control -- the technology driving collaborative development on github. Can't say I've mastered the learning curve yet. This is one of those situations where a video explanation really helps. Jessica Kerr (@jessitron) does a great one, [git happens -- with sticky notes](http://vimeo.com/46010208)! (this particular presentation is for coders coming from a background in subversion, but I've also seen Jessica do a great intro for novices who haven't heard of version control at all. Just search for *git happens*.
+     
+As with any newly hatched project, there's the question of what to add to `.gitignore`. For a project using `cocoapods`, see the pros and cons at [guides.cocoapods.org](http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control).  For this project, I want to keep it lightweight, but also keep track of the dependencies. To do this, I'll add the `pods/` directory to `.gitignore`, but keep the `podfile`, `podfile.lock` and other files under version control. I used a [stackoverflow post](http://stackoverflow.com/questions/18939421/what-should-xcode-5-gitignore-file-include) to get an appropriate `.gitignore` file.
      
      
 ###Temis
-The ozone data I'm using is basically scraping a website. It is old website, and lacks a friendly api. Raw science. To get the column ozone for a location, I need to query the website with a url string of the type `http://www.temis.nl/uvradiation/nrt/uvindex.php?lon=5.18&lat=52.1`, where the `lon` and `lat` values are provided by my code. The response is only available as .html, so I need to get this response and parse it to extract the desired column ozone values. I'll use hpple to parse the html response and it's xpath query system to walk the DOM and extract values from the relevant table. 
+The ozone data I'm using is basically scraping a website. It is old website, and lacks a friendly api. Raw science. To get the column ozone for a location, I need to query the website with a url string of the type `http://www.temis.nl/uvradiation/nrt/uvindex.php?lon=5.18&lat=52.1`, where the `lon` and `lat` values are provided by my code. The response is only available as `.html`, so I need to get this response and parse it to extract the desired column ozone values. I'll use `hpple` to parse the html response and it's xpath query system to walk the DOM and extract values from the relevant table. 
 
 The entire page is formated as a series of nested tables. The page header is one table; a second table holds the body of the page with one column holding the frame to the left, a blank column, and a column holding the data table I'm interested in.    
-html -> body -> 2nd table -> tbody -> tr -> 3rd td -> dl -> dd -> table ->tbody ->
-tr -> td -> <h2> location </h2>
-tr -> 3x td -> (headers as <i>) Date, UV index, ozone
-tr -> 3x td -> (data values) day Month year, .1f, .1f DU
 
-There are a lot of XML parsers and JSON parsers available. In a perfect world, .html files could be parsed as xml, but it doesn't work out that way. Many normal tags in .html are not xml compliant, so most xml parsers break down right away, inclduing the NSXMLParser included in iOS. Parsing .html is not an uncommon problem, so there are a number of librarires on GitHub that people have used. I used Hpple, which worked well, and I was able to combine with with reactive cocoa to create a pipeline straight from .html to my model objects.
+    html -> body -> 2nd table -> tbody -> tr -> 3rd td -> dl -> dd -> table ->tbody ->
+    tr -> td -> <h2> location </h2>
+    tr -> 3x td -> (headers as <i>) Date, UV index, ozone
+    tr -> 3x td -> (data values) day Month year, .1f, .1f DU
 
-There are still a few wrinkles that could use ironing. When dealing with locatioins time zones and solar data, times and dates become difficult to handle. The native date-handling in iOS doesn't make it easier, either. The UV Index published by TEMIS is for solar noon at the lat,lon location. Presumable, the column ozone is a prediction for the same time, although the website isn't specific. There is no accurate way to use only iOS internals to capture this date correctly. I also need time of solar noon at the location of interest, which creates a some problems, particularly when daylight savings time is taken into account in different jurisdictions, globally. Time is a mess.  
+There are a lot of XML parsers and JSON parsers available. In my perfect world, `.html` files could be parsed as `xml`, but it doesn't work out that way. Many normal tags in `.html` are not xml compliant, so most xml parsers break down right away, inclduing the `NSXMLParser` included in iOS. Parsing `.html` is not an uncommon problem, so there are a number of librarires on GitHub that people have used. I used `Hpple`, which worked well, and I was able to combine with with reactive cocoa to create a pipeline straight from `.html` to my model objects.
+
+There are still a few wrinkles that could use ironing. When dealing with locatioins time zones and solar data, times and dates become difficult to handle. The native date-handling in iOS doesn't make it easier, either. The UV Index published by TEMIS is for **solar noon** at the lat,lon of the location. Presumable, the `column ozone` is a prediction for the same time, although the website isn't specific. There is no accurate way to use only iOS internals to capture this date correctly, particularly when daylight savings time is taken into account in different jurisdictions, globally. Time is a mess.  
 
 ###Lessons
 **DateFormatter:**
@@ -40,15 +40,15 @@ There are still a few wrinkles that could use ironing. When dealing with locatio
 'YYYY' doesn't mean 2014. For normal years you need 'yyyy'. 
 The full spec for iOS 7 is at [unicode.org](http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Parsing_Dates_Times)
 **ReactiveCocoa:**
-NSLog is useful for getting info on intermediate stages.
+`NSLog` is useful for getting info on intermediate stages.
 There are some mysteries about what `filter:` and `ignore:` do that I should get a grip on.
 There is a lot of potential in this library, and many functions to explore. `map:` is your friend. Use it flexibly. 
 
-Useful discussions in the issues and on SO. One thing is that this library is changing rapidly -- 2.0 was recently released and 3.0 is being crafted. The terminology is shifting, even for core ideas. 
+There are many useful discussions in the issues on GitHub and on SO. One word of warning: this library is changing rapidly -- 2.0 was recently released and 3.0 is being crafted. The terminology is shifting, even for core ideas. Older posts may contain outdated code. 
 
-- prefer RACSignal over RACSequence. 
+- prefer `RACSignal` over `RACSequence`. 
 - Prefer 1-way binding with RAC over 2-way binding. (see discussion of issue proposign to drop RACChannel)
-- avoid `subscribeNext:`, `doError:`, and `doNext:`. These break the functional paradigm. (http://stackoverflow.com/questions/17281424/how-would-you-write-fetching-a-collection-the-reactive-cocoa-way) Note: `RACAble` was replaced with `RACObserve` in 2.0. 
+- avoid `subscribeNext:`, `doError:`, and `doNext:`. These break the functional paradigm. See this StackOverflow question on [fetching a collection](http://stackoverflow.com/questions/17281424/how-would-you-write-fetching-a-collection-the-reactive-cocoa-way) Note: `RACAble` was replaced with `RACObserve` in 2.0. 
 
 I'm finding it somewhat diffuclt to chain my signals together in the correct way, probably because I have some processing to do with different parts of the ozone signal. 
 
@@ -83,7 +83,7 @@ More recently, there this a handy bit of pseudo-code embedded in an [SO answer](
                 }];
         }]
 
-The code is very similar in the use of flattenMap:, but the second version (chaining) uses `then:` instead of additional `flattenMap:` and `subscribeNext:`. Since `subscribeNext:` is to be avoided, let's look into `then:`. Ah, no. The header files are your friend.
+The code is very similar in the use of `flattenMap:`, but the second version (chaining) uses `then:` instead of additional `flattenMap:` and `subscribeNext:`. Since `subscribeNext:` is to be avoided, let's look into `then:`. Ah, no. The header files are your friend.
 
 Regarding `then:`
 
@@ -131,4 +131,19 @@ One of the big holes in all this is that there are zero tests. That just isn't O
     -(NSDictionary *) solarParametersForDate:(NSDate *)date;
     
     @end
+
+#####Beware of `floatValue`:
+
+`[[NSNumber numberWithDouble:3.14159283] floatValue]`
+Write an extension so this raises an error!  `floatValue` is only 24 bit, so it truncates after 6 decimal places. This introduced a bizarre rounding error in my astronomy code. 
+
+#####Location Testing:  
+Nice comment under the original tutorial:
+>     If you want a specific location not included in xcode, you can create a gpx file for any location. You then import it into xcode to include it in your xcode location toggles.
+>             - marciokoko on March 4, 2014, 9:18 AM
+
+###Copyright + Licenses
+copyright is the right you get for publishing something. It doesn't matter what it is, or how it's published. This is a very general right that belongs to the maker. When you publish software, however, you can license someone else to use or distribute it. That's why we have to purchase license agreements from Adobe, Microsoft and Apple. When we publish software and want it to be usable by others, we can specify an 'open source' license, which is designed to make the software reusable and extensible. Github will allow you to simply include an open source license file when you make a new repository. I've already made the repository, so I need to make a separate license file and add it. 
+
+I think I'll use the MIT license. 
 

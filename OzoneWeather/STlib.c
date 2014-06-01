@@ -2,7 +2,7 @@
  *  STlib.c
  *  SunTool Library
  *
- *  Created by Suzanne Kiihne on 9/26/10.
+ *  Copyright (c) 2014 Suzanne Kiihne. All rights reserved.
  *
  *  Some open source license or another.
  *  Seriously, this stuff is really basic, so hey, just use it, rewirte it, whatever.

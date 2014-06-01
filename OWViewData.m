@@ -25,7 +25,6 @@
     self = [self init];
     if (self == nil) return nil;
     
-    // TODO: should these be copies?
     _date           = conditionsData.date;
     _temperature    = conditionsData.temperature;
     

@@ -2,8 +2,7 @@
  *  STlib.h
  *  SunTool
  *
- *  Created by Suzanne Kiihne on 9/26/10.
- *  Copyright 2010 Independent Research. All rights reserved.
+ *  Copyright (c) 2014 Suzanne Kiihne. All rights reserved.
  *
  */
 

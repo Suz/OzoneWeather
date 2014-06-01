@@ -59,11 +59,6 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
 
 -(NSNumber *)julianDateRelative2003For:(NSDate *)date {
 	
-	// Start date for Roberto Grena calculations = Jan 1, 2003 12:00:00
-    // Paper in: Solar Energy 82 (2008) 462–470
-	// See footnote on page 463:
-    // JD = JD_t + 2452640
-    
     NSNumber *jd2000 = [self julianDateFor:date];
     double grenaJD = jd2000.doubleValue - 2452640.0;
     return [NSNumber numberWithDouble:grenaJD];
@@ -94,7 +89,7 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
 
 // heliocentric and geocentric, but not topocentric
 -(NSDictionary *) solarParametersForDate:(NSDate *)date {
-	// need date relative 2003
+
     double julianDate = [self julianDateRelative2003For:date].doubleValue;
 	//NSLog(@"using julian %.6f", julianDate);
     
@@ -128,7 +123,6 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
 	//NSLog(@"using date %.4f",earthTime);
 	double localPressure = 1.00; // in atm
 	double localTemperature = 10.0; // in °C
-	//NSLog(@"temperature %.1f °C and pressure %.4f atm",localTemperature, localPressure);
 	
 	datapair RA_Dec;
     double RA = [[solarPosition objectForKey:kSolarRightAscensionKey] doubleValue];
