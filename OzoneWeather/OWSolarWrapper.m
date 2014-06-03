@@ -231,7 +231,7 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     
     double eqOfTime =  degToRad(1.9148)*sin(meanLongitude) + degToRad(-2.4680)*sin( 2*eclipLongitude); // radians
     
-    return @( 4*radToDeg(eqOfTime) );   // return value in minutes:
+    return @( -4*radToDeg(eqOfTime) );   // return value in minutes. Sign change needed to get sunset right!
 }
 
 - (NSDictionary *) sunTimesFor:(NSDate *)date atLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude {
@@ -240,18 +240,28 @@ NSString *const kAzimuthAngleKey =   @"azimuthAngle";
     NSDictionary *solarPosition = [self solarParametersForDate:date];
     
     double geocDeclination = [[solarPosition objectForKey:kSolarDeclinationKey] doubleValue];
-
-    double obsLat = M_PI/180 * latitude.doubleValue;
-
+    geocDeclination = degToRad(geocDeclination);
+    
+    double obsLat = degToRad(latitude.doubleValue);
+ 
     NSInteger timeZoneOffset = [[NSTimeZone defaultTimeZone] secondsFromGMTForDate:date];
     double offset = timeZoneOffset/3600.0;  // difference from GMT in Hours
 
+    // Astronomical answers:
+    // hour angle:  H = theta - alpha
+    //          theta = sidereal time = theta_0 + theta_1*(J - J2000) - lng
+    //                  theta_0 = 280.1600
+    //                  theta_1 = 360.9856235
+    //                  J-J2000 is Julian date since Jan 1 2000 (noon)
+    //                  lng is longitude (negative west).
+    //          alpha = right ascension
     // calculate final values.
-    double haRise = radToDeg(acos( 0.99961723/cos(obsLat)*cos(geocDeclination)-tan(obsLat)*tan(geocDeclination) ));
+    //double haRise = radToDeg(acos( 0.99961723/cos(obsLat)*cos(geocDeclination)-tan(obsLat)*tan(geocDeclination) ));
     //NSLog(@"The HA sunrise angle is %.4f.", haRise);
+    double haRise = radToDeg(acos(-0.0145381/cos(obsLat)*cos(geocDeclination)-tan(obsLat)*tan(geocDeclination)));
     
     double equationOfTime = [[self equationOfTimeFor:date] doubleValue];
-
+    //equationOfTime = equationOfTime / 4;  // convert minutes --> degrees
     // dates as day-fractions
     double noonTime = (720 - 4*longitude.doubleValue - equationOfTime + offset*60) / 1440;
     double riseTime = noonTime - haRise*4/1440;

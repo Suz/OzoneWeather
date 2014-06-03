@@ -53,13 +53,15 @@
     }
 
     // UVI: TEMIS reports max for today. Also want current value.
-    double earthSunDistance = [calculator earthSunDistanceFor:ozoneData.ozoneDate].floatValue;
+    double earthSunDistance = [calculator earthSunDistanceFor:ozoneData.ozoneDate].doubleValue;
     
     NSDictionary *noonSolarAngles = [calculator solarAnglesForDate:ozoneData.ozoneDate
                                                         atLatitude:conditionsData.latitude
                                                       andLongitude:conditionsData.longitude];
     
-    double noonZenithAngle = [[noonSolarAngles objectForKey:kZenithAngleKey] floatValue];
+    double noonZenithAngle = [[noonSolarAngles objectForKey:kZenithAngleKey] doubleValue];
+    noonZenithAngle = degToRad(noonZenithAngle);
+    
     // Maximum clear sky UV Index (solar noon)
     double maxUVIndex = [self uvIndexForOzone:ozoneData.columnOzone
                                    ZenithAngle:@(noonZenithAngle)
@@ -75,8 +77,8 @@
                                                     atLatitude:conditionsData.latitude
                                                   andLongitude:conditionsData.longitude];
     
-    double zenithAngle = [[solarAngles objectForKey:kZenithAngleKey] floatValue];
-    
+    double zenithAngle = [[solarAngles objectForKey:kZenithAngleKey] doubleValue];
+    zenithAngle = degToRad(zenithAngle);
     
     double calcUVIndex = [self uvIndexForOzone:ozoneData.columnOzone
                                       ZenithAngle:@(zenithAngle)
@@ -252,7 +254,11 @@
 // uvi_c = uvi * (1-0.56*f)   f = cloud fraction
 //
 -(CGFloat)cloudFilter:(NSNumber *)cloudCover {
-    return (1.0 - 0.56 * cloudCover.floatValue);
+    double cc = cloudCover.doubleValue;
+    if (cc > 1.0) {
+        cc = cc / 100;
+    }
+    return (1.0 - 0.56 * cc);
 }
 
 
