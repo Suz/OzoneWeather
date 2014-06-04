@@ -9,6 +9,7 @@
 #import "OWManager.h"
 #import "OWClient.h"
 #import <TSMessages/TSMessage.h>
+#import "RACEXTScope.h"
 
 @interface OWManager ()
 
@@ -44,9 +45,11 @@
         
         _client = [[OWClient alloc] init];
         
+        @weakify(self)
         [[[[RACObserve(self, currentLocation) ignore:nil]
           
            flattenMap:^(CLLocation *newLocation) {
+               @strongify(self)
                return [[self updateOzoneForLocation:newLocation]
                        flattenMap:^(NSArray *ozoneForecast){
                            return [RACSignal merge:@[
@@ -100,8 +103,10 @@
 }
 
 -(RACSignal *)updateCurrentWeatherForLocation:(CLLocation *)location andOzoneForecast:(NSArray *)ozone {
+    @weakify(self);
     return [[[self.client fetchCurrentConditionsForLocation:location.coordinate]
             map:^(OWCondition *condition){
+                @strongify(self);
                 return [self updateDataWith:condition andOzone:ozone];
             }]
             // TODO: change architecture so this isn't a side effect.
@@ -111,6 +116,7 @@
 }
 
 -(RACSignal *)updateHourlyForecastForLocation:(CLLocation *)location andOzoneForecast:(NSArray *)ozone {
+    @weakify(self);
     return [[[self.client fetchHourlyForecastForLocation:location.coordinate]
             map:^(NSArray *forecast){
                 RACSequence *hourly = forecast.rac_sequence;
@@ -119,6 +125,7 @@
                         condition.latitude = @(location.coordinate.latitude);
                         condition.longitude = @(location.coordinate.longitude);
                     }
+                    @strongify(self);
                    return [self updateDataWith:condition andOzone:ozone];
                 }] array];
             }]
@@ -128,7 +135,7 @@
 }
 
 -(RACSignal *)updateDailyForecastForLocation:(CLLocation *)location andOzoneForecast:(NSArray *)ozone {
-
+    @weakify(self);
     return [[[self.client fetchDailyForecastForLocation:location.coordinate]
             map:^(NSArray *forecast){
                 RACSequence *daily = forecast.rac_sequence;
@@ -139,8 +146,9 @@
                                 condition.latitude = @(location.coordinate.latitude);
                                 condition.longitude = @(location.coordinate.longitude);
                             }
+                            @strongify(self);
                             return [self updateDataWith:condition andOzone:ozone];
-                }]   array];
+                }] array];
 
             }]
             doNext:^(NSArray *dailyData) {

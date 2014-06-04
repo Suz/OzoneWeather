@@ -10,6 +10,7 @@
 #import "OWManager.h"
 
 #import "OWViewData.h"
+#import "RACEXTScope.h"
 
 @interface OWController ()
 
@@ -236,13 +237,14 @@
 -(void)configureHeaderCell:(UITableViewCell *)cell title:(NSString *)title {
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
     cell.textLabel.text = title;
-    cell.detailTextLabel.text = @"";
+    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:14];
+    cell.detailTextLabel.text = @"°F | UV Index | vit. D";
     cell.imageView.image = nil;
 }
 
 -(void)configureTableCell:(UITableViewCell *)cell{
     cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:18];
-    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:18];
+    cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue-Light" size:14];
     cell.imageView.contentMode = UIViewContentModeCenter;
     cell.imageView.layer.cornerRadius = 5.0;
     cell.imageView.layer.masksToBounds = YES;
@@ -251,7 +253,7 @@
 -(void)configureHourlyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     [self configureTableCell:cell];
     cell.textLabel.text = [self.hourlyFormatter stringFromDate:weather.date];
-    cell.detailTextLabel.text = weather.vitaminDTime;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° | %@ | %@", weather.temperature.doubleValue, weather.uvIndex, weather.vitaminDTime];
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.backgroundColor = [weather uvDangerLevel];
 }
@@ -259,7 +261,7 @@
 -(void)configureDailyCell:(UITableViewCell *)cell withWeather:(OWViewData *)weather {
     [self configureTableCell:cell];
     cell.textLabel.text = [self.dailyFormatter stringFromDate:weather.date];
-    cell.detailTextLabel.text = weather.maxUVIndex;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%.0f° | %@ | %@", weather.hiTemp.doubleValue, weather.maxUVIndex, weather.vitaminDTime];
     cell.imageView.image = [UIImage imageNamed:[weather weatherImageName]];
     cell.imageView.backgroundColor = [weather maxUVDangerLevel];
 }

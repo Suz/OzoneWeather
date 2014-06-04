@@ -111,9 +111,9 @@
         _uvIndex = [NSString stringWithFormat:@"%.1f", filteredUVIndex];
     }
     
-    _vitaminDTime = @"no vitamin D";
+    _vitaminDTime = @" – ";
     if (filteredUVIndex > 2.0) {
-        _vitaminDTime = [NSString stringWithFormat:@"Vitamin D in %@ min.", [self stringForSeconds:vitDTime]];
+        _vitaminDTime = [NSString stringWithFormat:@"%@ min", [self stringForSeconds:vitDTime]];
     }
     
    // _UVADanger;  --  I thought there was a paper by Fioletov on the UVA intensity relative to UVB or UVI over the course of a day, but I haven't been able to find it. Need to sign on to web of science, possibly from university library. 
